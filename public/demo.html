@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <style type="text/css">
+    body, html, #allmap {width: 100%;height: 100%;overflow: hidden;}
+  </style>
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link href="css/icheck/flat/blue.css" rel="stylesheet">
+  <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script type="text/javascript" src="js/jquery.sprintf.min.js"></script>
+  <script src="js/icheck.min.js"></script>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=BP8iUvjr9G2qm5zYcmFLA6f4GyXNZEer"></script>
+  <script type="text/javascript" src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
+  <script type="text/javascript" src="js/Heatmap.js"></script>
+  <script type="text/javascript" src="js/echarts.js"></script>
+  <script type="text/javascript" src="js/MonitoringPoints.js"></script>
+  <script type="text/javascript" src="js/MonitoringInfo.js"></script>
+  <script type="text/javascript" src="js/AreaPoints.js"></script>
+  <script type="text/javascript" src="js/ToolFilter.js"></script>
+  <script type="text/javascript" src="js/ToolMenu.js"></script>
+  <script type="text/javascript" src="js/ToolEquivalentIcon.js"></script>
+  <script type="text/javascript" src="js/WinInfo.js"></script>
+  <script type="text/javascript" src="js/PointsData.js"></script>
+  <title>饮用水监测 Demo</title>
+</head>
+<body>
+  <div class="content">
+    <div id="right_area">
+      <div class="panel-group">
+        <div class="panel">
+          <div class="panel-title"><a class="open" href="javascript:void(0)">基本信息</a></div>
+          <div class="panel-body open">
+            <dl>
+              <dt>编号:</dt><dd>黄出水监001号</dd>
+              <dt>单位名称:</dt><dd>黄出水监001号</dd>
+              <dt>地址:</dt><dd>半淞园路592号</dd>
+              <dt>区县:</dt><dd>黄浦区</dd>
+              <dt>卫生许可证号:</dt><dd>310012589</dd>
+              <dt>供水范围:</dt><dd>67</dd>
+              <dt>水质指数:</dt><dd>3.37</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><a class="open" href="javascript:void(0)">评估信息</a></div>
+          <div class="panel-body">
+            <a id="fullChart" href="javascript:void(0)" class="fullChart">full</a>
+            <div class="echart"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><a href="javascript:void(0)">检测信息</a></div>
+          <div class="panel-body hide"></div>
+        </div>
+      </div>
+    </div>
+    <div id="left-area">
+      <a href="javascript:void(0)" class="bt-area area-close"></a>
+      <div class="area-shadow"></div>
+      <div id="allmap"></div>
+    </div>
+
+    <div class="blockAll hide"></div>
+    <div class="win-chart hide">
+      <div class="win-head">
+        <a class="win-close" href="javascript:void(0)">关闭</a>
+        <div class="win-title">标题标题标题标题标题标题标题</div>
+      </div>
+      <div class="win-body">
+        <div class="echart"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>2015-01</th>
+              <th>2015-02</th>
+              <th>2015-03</th>
+              <th>2015-04</th>
+              <th>2015-05</th>
+              <th>2015-06</th>
+              <th>2015-07</th>
+              <th>2015-08</th>
+              <th>2015-09</th>
+              <th>2015-10</th>
+              <th>2015-11</th>
+              <th>2015-12</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="blue">
+              <td>1</td>
+              <td>2</td>
+              <td>3</td>
+              <td>4</td>
+              <td>5</td>
+              <td>6</td>
+              <td>7</td>
+              <td>8</td>
+              <td>9</td>
+              <td>10</td>
+              <td>11</td>
+              <td>12</td>
+            </tr>
+            <tr class="yellow">
+              <td>微清洁</td>
+              <td>微清洁</td>
+              <td>微清洁</td>
+              <td>微清洁</td>
+              <td>微清洁</td>
+              <td class="green">清洁</td>
+              <td>微清洁</td>
+              <td>微清洁</td>
+              <td>微清洁</td>
+              <td class="green">清洁</td>
+              <td>微清洁</td>
+              <td>微清洁</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+<script>
+  // 监测点 信息框的显示
+  function evtMonitoringOver(e){
+    if (!iconInfo) {
+      var params = e.target._params;
+      var data = {
+        title: params.name,
+        exponential: params.exponential,
+        exponentialDes: params.exponentialDes,
+        lng: params.lng,
+        lat: params.lat
+      };
+      iconInfo = new BMapLib.MonitoringInfo(data);
+      map.addOverlay(iconInfo);
+    }
+  }
+  // 监测点 信息框的关闭
+  function evtMonitoringOut(e){
+    if (iconInfo != null) {
+      map.removeOverlay(iconInfo);
+      iconInfo = null;
+    }
+  }
+  // 监测点 点击
+  function evtMonitoringClick(e){
+    var params = e.target._params;
+    var infoWinPoint = null;
+    // console.log(params);
+    sidebarInfo(params);
+
+    if (infoWin != null) {
+      infoWinPoint = infoWin.getPosition();
+      infoWin.close();
+      infoWin = null;
+    }
+
+    if (infoWinPoint != null && infoWinPoint.lng == params.lng && infoWinPoint.lat == params.lat) {
+      prepoint = null;
+      infoWinPoint = null;
+    } else {
+      // 查找父级和同纪
+      if (params.prepoint != '')
+        prepoint = params.prepoint;
+      else if(params.type==1)
+        prepoint = params.name;
+      addPoints();
+
+      // 绘制区域
+      if (params.area.length > 0) {
+        if (ply != null) map.removeOverlay(ply);
+        var pts=[], i;
+        for (i in params.area) {
+          pts.push(new BMap.Point(params.area[i].lng, params.area[i].lat));
+        }
+        var areaColor = "#44B5DF";
+        if(params.type == 1){
+          areaColor = "#BAB2B2";
+        }
+        ply = new BMap.Polygon(pts,{fillColor:areaColor,fillOpacity:0.3,strokeWeight:1});
+        map.addOverlay(ply);
+      }
+
+      infoWin = new BMapLib.WinInfo(map, params);
+      infoWin.addEventListener('onclose', function(){
+        prepoint = null;
+        infoWin = null;
+        addPoints();
+      });
+
+      infoWin.open(new BMap.Point(params.lng,params.lat));
+      for (var i in map.getOverlays()) {
+        var cur = map.getOverlays()[i];
+        if (!cur.hasOwnProperty('_params') || !cur._params.hasOwnProperty('lng')) continue;
+        if (cur._params.lng == params.lng && cur._params.lat == params.lat) {
+          $(cur._container).find('a').addClass('selected');
+        }
+      }
+    }
+  }
+
+  // 加载所有的监测点
+  function addAllPoints(pointDatas) {
+    for (var key in pointDatas) {
+      var pointData = pointDatas[key];
+      var myRM = new BMapLib.MonitoringPoints(pointData);
+      myRM.addEventListener("onmouseover", evtMonitoringOver);
+      myRM.addEventListener("onmouseout", evtMonitoringOut);
+      myRM.addEventListener("onclick", evtMonitoringClick);
+      map.addOverlay(myRM);
+    }
+  }
+  // 加载区域的监测点
+  function addAreaPoints(pointDatas) {
+    var key,areas = {};
+    for (key in pointDatas) {
+      var pointData = pointDatas[key];
+      if (!areas.hasOwnProperty(pointData.areaName)) areas[pointData.areaName] = {count:0, exponential:0, lng:0, lat:0};
+      areas[pointData.areaName].count++;
+      areas[pointData.areaName].exponential += pointData.exponential;
+      areas[pointData.areaName].lng += pointData.lng;
+      areas[pointData.areaName].lat += pointData.lat;
+    }
+    for (key in areas) {
+      var area = areas[key];
+      var areaData = {
+        areaName:key,
+        count:area.count,
+        exponential:area.exponential/area.count,
+        lng:area.lng/area.count,
+        lat:area.lat/area.count
+      };
+      var myRM = new BMapLib.AreaPoint(areaData);
+      map.addOverlay(myRM);
+    }
+  }
+  // 筛选数据
+  function filertData()
+  {
+    var datas = [];
+    if (prepoint != null) {
+      for (var key in pointDatas) {
+        var point = pointDatas[key];
+        if (point.name == prepoint || point.prepoint == prepoint) datas.push(point);
+      }
+    } else if (pointFilterData != null) {
+      for (var key in pointDatas) {
+        var point = pointDatas[key];
+        var pass = true;
+        if (point.type == 0 && pointFilterData.prepoint.indexOf(point.name) == -1) pass = false;
+        if (pointFilterData.areaName.indexOf(point.areaName) == -1) pass = false;
+        if (point.type == 1 && pointFilterData.lvl.indexOf(point.lvl) == -1) pass = false;
+        if (point.type == 2 && pointFilterData.mtd.indexOf(point.mtd) == -1) pass = false;
+        if (point.type == 1 && pointFilterData.tapState.indexOf(point.state) == -1) pass = false;
+        if (point.type == 2 && pointFilterData.rawState.indexOf(point.state) == -1) pass = false;
+        if (pass == true) datas.push(point);
+      }
+    } else {
+      datas = pointDatas;
+    }
+    return datas;
+  }
+
+
+
+
+
+
+
+  // 加载监测点图层
+  function addPoints()
+  {
+    map.clearOverlays();
+    var datas = filertData();
+    if (map.getZoom() < 12) {
+      addAreaPoints(datas);
+    } else {
+      addAllPoints(datas);
+    }
+  }
+
+  // 加载热力图
+  function addHeatmap()
+  {
+    map.clearOverlays();
+    var datas = filertData();
+    var points = [];
+    for (var key in datas) {
+      var point = pointDatas[key];
+      points.push({"lng":point.lng,"lat":point.lat,"count":point.exponential*5});
+    }
+    if (heatmapOverlay == null) {
+      // 生成热力图防止卡顿
+      heatmapOverlay = new BMapLib.HeatmapOverlay({
+        "radius": 80*(map.getZoom()-9)/2,
+        "visible": true,
+        "gradient": {
+          0.2: "rgb(16,117,58)",
+          0.3: "rgb(55,169,9)",
+          0.4: "rgb(172,231,1)",
+          0.7: "rgb(252,243,2)",
+          0.8: "rgb(252,243,2)",
+          1.0: "rgb(204,48,25)"
+        }
+      });
+    } else {
+      heatmapOverlay.setOptions({
+        "radius": 80*(map.getZoom()-9)/2
+      });
+    }
+    map.addOverlay(heatmapOverlay);
+    heatmapOverlay.setDataSet({data:points,max:12});
+  }
+
+
+  // 主入口
+  function main()
+  {
+    toolEquivalentIcon.hide();
+    switch(curMenuId)
+    {
+    case 'menu1':
+      prepoint = null;
+      addPoints();
+      break;
+    case 'menu2':
+      toolEquivalentIcon.show();
+      addHeatmap();
+      break;
+    case 'menu3':
+      myDis.open();
+      break;
+    case 'menu4':
+      break;
+    case 'menu5':
+      break;
+    };
+  }
+
+
+  // 边栏信息更新
+  function sidebarInfo(params)
+  {
+    // 更新基本信息
+    var lineData = {
+      name: params.name,
+      chartData: [
+        {"date":"2015-01","value":0.15},
+        {"date":"2015-02","value":0.05},
+        {"date":"2015-03","value":0.01},
+        {"date":"2015-04","value":0.11},
+        {"date":"2015-05","value":0.08},
+        {"date":"2015-06","value":0.23},
+        {"date":"2015-07","value":0.07},
+        {"date":"2015-08","value":0.09},
+        {"date":"2015-09","value":0.09},
+        {"date":"2015-10","value":0.09},
+        {"date":"2015-11","value":0.09},
+        {"date":"2015-12","value":0.09}
+      ]
+    };
+    var item = '<dt>%s:</dt><dd>%s</dd>';
+    var html = '';
+    switch(params.type){
+      case 0:
+        html += $.sprintf(item, '水源名称', params.name);
+        html += $.sprintf(item, '污染指数', params.exponential);
+        html += $.sprintf(item, '污染等级', params.exponentialDes);
+        break;
+      case 1:
+        html += $.sprintf(item, '编号', params.name);
+        html += $.sprintf(item, '单位名称', params.name);
+        html += $.sprintf(item, '地址', params.address);
+        html += $.sprintf(item, '区县', params.areaName);
+        html += $.sprintf(item, '卫生许可证号', params.allowId);
+        html += $.sprintf(item, '供水范围', params.acreage);
+        html += $.sprintf(item, '水质指数', params.exponential);
+        break;
+      case 2:
+        html += $.sprintf(item, '编号', params.name);
+        html += $.sprintf(item, '地址', params.address);
+        html += $.sprintf(item, '区县', params.areaName);
+        html += $.sprintf(item, '所属单位', params.fname);
+        html += $.sprintf(item, '水质指数', params.exponential);
+        break;
+    };
+    $('.panel-body:first').html(html);
+
+
+    // 更新折线图
+    curChartData = lineData;
+    var xAxisData = [];
+    var yAxisData = [];
+    for (var i in lineData.chartData) {
+      xAxisData.push(lineData.chartData[i].date);
+      yAxisData.push(lineData.chartData[i].value);
+    }
+    var eClartEl = $('.panel-body:eq(1) .echart');
+    eClartEl.html();
+    var eChart = echarts.init(eClartEl[0]);
+    var option = {
+      grid: {
+        top: 10,
+        left: 45,
+        right: 10
+      },
+      color: ['#24B9F6'],
+      xAxis: {
+        axisLabel: {
+          interval: 0,
+          rotate: 270
+        },
+        data: xAxisData
+      },
+      yAxis: {},
+      tooltip: {},
+      series: [{
+        type: 'line',
+        data: yAxisData
+      }]
+    };
+    eChart.setOption(option, true);
+  }
+
+
+
+
+
+  var prepointRelation = {'青草沙水库':[],'陈行水库':[],'东风西沙水库':[],'黄浦江上游':[]};
+  for (var x in pointDatas) {
+    var point = pointDatas[x];
+    if (point.prepoint == '') continue;
+    for (var y in prepointRelation) {
+      var relation = prepointRelation[y];
+      if (point.prepoint == y) {
+        if (prepointRelation[y].indexOf(point.name) == -1) prepointRelation[y].push(point.name);
+      } else if (prepointRelation[y].indexOf(point.prepoint) != -1) {
+        if (prepointRelation[y].indexOf(point.name) == -1) prepointRelation[y].push(point.name);
+      }
+    }
+  }
+  // 百度地图API功能
+  var heatmapOverlay = null;
+  var prepoint = null;
+  var curMenuId = 'menu1';
+  var iconInfo = null;
+  var infoWin = null;
+  var ply = null;
+  var curChartData = null;
+  var pointFilterData = null;
+  var map = new BMap.Map("allmap",{minZoom:10, maxZoom:14});
+  var myDis = new BMapLib.DistanceTool(map);
+  map.centerAndZoom("上海",12);
+  map.enableScrollWheelZoom(true);
+
+  // 添加工具条
+  var toolFilter = new BMapLib.ToolFilter();
+  toolFilter.addEventListener("oncheck", function(e){
+    pointFilterData = e.data;
+    main();
+  });
+  map.addControl(toolFilter);
+  var toolMenu = new BMapLib.ToolMenu();
+  toolMenu.addEventListener("onmenu", function(e){
+    curMenuId = e.id;
+    main();
+  });
+  map.addControl(toolMenu);
+  var toolEquivalentIcon = new BMapLib.ToolEquivalentIcon();
+  map.addControl(toolEquivalentIcon);
+  toolEquivalentIcon.hide();
+
+
+  map.addEventListener("zoomend", function(e){
+    // console.log("zoom"+map.getZoom());
+    main();
+  });
+
+
+
+
+
+
+  // 信息框的事件
+  // 信息框整体的缩放展开
+  $('.bt-area').on('click', function(){
+    var isClose = $('.bt-area').hasClass('area-close')
+    if (isClose)
+      $('.bt-area').removeClass('area-close').addClass('area-open');
+    else
+      $('.bt-area').removeClass('area-open').addClass('area-close');
+    $("#right_area").animate({width:(isClose?'345':'0')+'px'},100);
+  });
+  // 信息框内的 panel 的缩放展开
+  $('.panel-title a').on('click', function(e){
+    var cur = $(e.currentTarget)
+      , isOpen = cur.hasClass('open')
+      , body = cur.parent().parent().find('.panel-body');
+    if (isOpen) cur.removeClass('open');
+    else cur.addClass('open');
+    body.slideToggle();
+  })
+  // echart 的放大缩小
+  $('#fullChart').on('click', function(e){
+    var btFull = $('#fullChart');
+    if(btFull.hasClass('opened')) {
+      winChartOpen('close');
+    } else {
+      winChartOpen('open');
+    }
+  });
+
+
+  function winChartOpen(opened)
+  {
+    var btFull = $('#fullChart');
+    var win = $('.win-chart');
+    var blockAll = $('.blockAll');
+    if (opened == 'open') {
+      btFull.addClass('opened');
+      blockAll.show();
+      win.show(300);
+    } else {
+      btFull.removeClass('opened');
+      blockAll.hide();
+      win.hide(300);
+    }
+    if (opened == 'open' && curChartData != null) {
+      var xAxisData = [];
+      var yAxisData = [];
+      var thStr = '';
+      var tdValStr = '';
+      var tdLabStr = '';
+      var BlLab = false;
+      for (var i in curChartData.chartData) {
+        xAxisData.push(curChartData.chartData[i].date);
+        yAxisData.push(curChartData.chartData[i].value);
+        thStr += $.sprintf('<th>%s</th>', curChartData.chartData[i].date);
+        tdValStr += $.sprintf('<td>%s</td>', curChartData.chartData[i].value);
+        BlLab = (curChartData.chartData[i].value <= 0.07);
+        tdLabStr += $.sprintf('<td%s>%s</td>', (BlLab?' class="green"':''),(BlLab?'清洁':'微清洁'));
+      }
+      var eClartEl = win.find('.echart');
+      eClartEl.html();
+      var eChart = echarts.init(eClartEl[0]);
+      var option = {
+        grid: {
+          top: 30,
+          left: 40,
+          right: 30,
+          bottom: 25
+        },
+        color: ['#24B9F6'],
+        xAxis: {
+          axisLabel: {
+            interval: 0
+          },
+          data: xAxisData
+        },
+        yAxis: {},
+        tooltip: {},
+        series: [{
+          name:'水质指数',
+          type: 'line',
+          data: yAxisData,
+          markPoint: {
+            data: [
+              {type: 'max', name: '最大值'},
+              {type: 'min', name: '最小值'}
+            ]
+          },
+          markLine: {
+            data: [
+              {type: 'average', name: '平均值'}
+            ]
+          }
+        }]
+      };
+      eChart.setOption(option, true);
+
+      win.find('.win-title').html(curChartData.name);
+      win.find('table thead tr').html(thStr);
+      win.find('table tbody tr:eq(0)').html(tdValStr);
+      win.find('table tbody tr:eq(1)').html(tdLabStr);
+    }
+  }
+
+  $('.win-chart .win-close').on('click', function(e){
+    winChartOpen('close');
+  });
+</script>
+
+<script>
+$(document).ready(function(){
+  $('input').iCheck({
+    checkboxClass: 'icheckbox_flat-blue',
+    radioClass: 'iradio_flat-blue'
+  });
+  $('.blockAll').css('opacity','0.3');
+});
+</script>
+

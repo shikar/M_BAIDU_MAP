@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link href="css/icheck/flat/blue.css" rel="stylesheet">
+  <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="js/icheck.min.js"></script>
+  <title>设置点的新图标</title>
+</head>
+<body>
+  <div class="icon icon-main-gre"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-main-red"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-main-none"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-main-dashed-gre"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-main-dashed-red"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-tap-gre"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-tap-red"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-tap-none"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-tap-dashed-gre"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-tap-dashed-red"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-raw-gre"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-raw-red"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-raw-none"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-raw-dashed-gre"><a class="selected" href="javascript:void(0)"></a></div>
+  <div class="icon icon-raw-dashed-red"><a class="selected" href="javascript:void(0)"></a></div>
+
+  <div class="icon-info">
+    <div class="icon-info-title">青草沙水库</div>
+    <div class="icon-info-exp">0.1</div>
+    <div class="icon-info-desc">好</div>
+  </div>
+
+  <a href="javascript:void(0)" class="bt-area area-open"></a>
+
+  <div class="tool-menu">
+    <ul>
+      <li><a id="menu1" class="menu1 selected" href="javascript:void(0)">检测点</a></li>
+      <li><a id="menu2" class="menu2" href="javascript:void(0)">区域水质</a></li>
+      <li><a id="menu3" class="menu3 disenable" href="javascript:void(0)">测距</a></li>
+      <li><a id="menu4" class="menu4 disenable" href="javascript:void(0)">趋势</a></li>
+      <li><a id="menu5" class="menu5 disenable" href="javascript:void(0)">预测</a></li>
+    </ul>
+  </div>
+
+  <div class="tool-filer">
+    <div class="tf-icon"></div>
+    <div class="tf-box" style="display: block">
+      <div class="tf-bt-close">关闭</div>
+      <ul class="tf-tab">
+        <li class="tf-tab1 selected" data-target="tfArea">区县</li>
+        <li class="tf-tab2" data-target="tfMain">原水</li>
+        <li class="tf-tab3" data-target="tfTap">出厂水</li>
+        <li class="tf-tab4" data-target="tfRaw">管网水</li>
+      </ul>
+      <div id="tfArea" class="tf-panel" style="display: block">
+        <label><input type="checkbox" name="selectAll" checked> 全选</label><br>
+        <label><input type="checkbox" name="areaName" value="黄浦区" checked> 黄浦区</label>
+        <label><input type="checkbox" name="areaName" value="徐汇区" checked> 徐汇区</label>
+        <label><input type="checkbox" name="areaName" value="长宁区" checked> 长宁区</label>
+        <label><input type="checkbox" name="areaName" value="静安区" checked> 静安区</label>
+        <label><input type="checkbox" name="areaName" value="普陀区" checked> 普陀区</label>
+        <label><input type="checkbox" name="areaName" value="虹口区" checked> 虹口区</label>
+        <label><input type="checkbox" name="areaName" value="杨浦区" checked> 杨浦区</label>
+        <label><input type="checkbox" name="areaName" value="闵行区" checked> 闵行区</label>
+        <label><input type="checkbox" name="areaName" value="宝山区" checked> 宝山区</label>
+        <label><input type="checkbox" name="areaName" value="嘉定区" checked> 嘉定区</label>
+        <label><input type="checkbox" name="areaName" value="浦东区" checked> 浦东区</label>
+        <label><input type="checkbox" name="areaName" value="金山区" checked> 金山区</label>
+        <label><input type="checkbox" name="areaName" value="松江区" checked> 松江区</label>
+        <label><input type="checkbox" name="areaName" value="青浦区" checked> 青浦区</label>
+        <label><input type="checkbox" name="areaName" value="奉贤区" checked> 奉贤区</label>
+        <label><input type="checkbox" name="areaName" value="崇明区" checked> 崇明区</label>
+      </div>
+      <div id="tfMain" class="tf-panel" style="display: block">
+        <label><input type="checkbox" name="selectAll" checked> 全选</label><br>
+        <label><input type="checkbox" name="prepoint" value="青草沙水库" checked> 青草沙水库</label>
+        <label><input type="checkbox" name="prepoint" value="陈行水库" checked> 陈行水库</label>
+        <label><input type="checkbox" name="prepoint" value="东风西沙水库" checked> 东风西沙水库</label>
+        <label><input type="checkbox" name="prepoint" value="黄浦江上游" checked> 黄浦江上游</label>
+      </div>
+      <div id="tfTap" class="tf-panel" style="display: block">
+        <label><input type="checkbox" name="selectAll" checked> 全选</label><br>
+        <dl>
+          <dt>级别:</dt>
+          <dd>
+            <label><input type="checkbox" name="lvl" value="市级" checked> 市级</label>
+            <label><input type="checkbox" name="lvl" value="区级" checked> 区级</label>
+            <label><input type="checkbox" name="lvl" value="乡镇级" checked> 乡镇级</label>
+            <label><input type="checkbox" name="lvl" value="自建" checked> 自建</label>
+          </dd>
+          <dt>处理类型:</dt>
+          <dd>
+            <label><input type="checkbox" name="pcf" value="深度处理" checked> 深度处理</label>
+            <label><input type="checkbox" name="pcf" value="常规处理" checked> 常规处理</label>
+          </dd>
+          <dt>监测点状态:</dt>
+          <dd>
+            <label><input type="checkbox" name="tapState" value="有效" checked> 在监</label>
+            <label><input type="checkbox" name="tapState" value="无效" checked> 取消</label>
+          </dd>
+        </dl>
+      </div>
+      <div id="tfRaw" class="tf-panel" style="display: block">
+        <label><input type="checkbox" name="selectAll" checked> 全选</label><br>
+        <dl>
+          <dt>监测方法:</dt>
+          <dd>
+            <label><input type="checkbox" name="mtd" value="在线" checked> 在线监测</label>
+            <label><input type="checkbox" name="mtd" value="离线" checked> 离线监测</label>
+          </dd>
+          <dt>监测点状态:</dt>
+          <dd>
+            <label><input type="checkbox" name="rawState" value="有效" checked> 在监</label>
+            <label><input type="checkbox" name="rawState" value="无效" checked> 取消</label>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="win-info">
+    <div class="win-head">
+      <a class="win-close" href="javascript:void(0)">关闭</a>
+    </div>
+    <div class="win-body">
+      <dl>
+        <dt>测试:</dt>
+        <dd>测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</dd>
+        <hr>
+        <dt>测试试:</dt>
+        <dd>测试测试测试测试测试测试测试测试测试测</dd>
+        <hr>
+        <dt>测试试试:</dt>
+        <dd>测试测试测试测试测试测</dd>
+        <hr>
+        <dt>测试试试试试:</dt>
+        <dd>测试测试测试</dd>
+        <hr>
+      </dl>
+    </div>
+    <div class="win-foot">
+      <a href="javascript:void(0)">最近检测结果</a>
+      <a href="javascript:void(0)">既往检测结果</a>
+      <a href="javascript:void(0)">在线检测信息</a>
+    </div>
+  </div>
+  
+  <div class="panel-group">
+    <div class="panel">
+      <div class="panel-title"><a class="open" href="javascript:void(0)">基本信息</a></div>
+      <div class="panel-body open">
+        <dl>
+          <dt>编号:</dt><dd>黄出水监001号</dd>
+          <dt>单位名称:</dt><dd>黄出水监001号</dd>
+          <dt>地址:</dt><dd>半淞园路592号</dd>
+          <dt>区县:</dt><dd>黄浦区</dd>
+          <dt>卫生许可证号:</dt><dd>310012589</dd>
+          <dt>供水范围:</dt><dd>67</dd>
+          <dt>水质指数:</dt><dd>3.37</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><a href="javascript:void(0)">评估信息</a></div>
+      <div class="panel-body">
+        <a id="fullChart" href="javascript:void(0)" class="fullChart opened">full</a>
+        <div class="echart"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><a href="javascript:void(0)">检测信息</a></div>
+      <div class="panel-body"></div>
+    </div>
+  </div>
+
+
+  <div class="win-chart">
+    <div class="win-head">
+      <a class="win-close" href="javascript:void(0)">关闭</a>
+      <div class="win-title">标题标题标题标题标题标题标题</div>
+    </div>
+    <div class="win-body">
+      <div class="echart"></div>
+      <table>
+        <thead>
+          <tr>
+            <th>2015-01</th>
+            <th>2015-02</th>
+            <th>2015-03</th>
+            <th>2015-04</th>
+            <th>2015-05</th>
+            <th>2015-06</th>
+            <th>2015-07</th>
+            <th>2015-08</th>
+            <th>2015-09</th>
+            <th>2015-10</th>
+            <th>2015-11</th>
+            <th>2015-12</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="blue">
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+            <td>6</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>10</td>
+            <td>11</td>
+            <td>12</td>
+          </tr>
+          <tr class="yellow">
+            <td>微清洁</td>
+            <td>微清洁</td>
+            <td>微清洁</td>
+            <td>微清洁</td>
+            <td>微清洁</td>
+            <td class="green">清洁</td>
+            <td>微清洁</td>
+            <td>微清洁</td>
+            <td>微清洁</td>
+            <td class="green">清洁</td>
+            <td>微清洁</td>
+            <td>微清洁</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>
+
+<script>
+$(document).ready(function(){
+  $('input').iCheck({
+    checkboxClass: 'icheckbox_flat-blue',
+    radioClass: 'iradio_flat-blue'
+  });
+});
+</script>
+

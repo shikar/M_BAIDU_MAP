@@ -1,0 +1,607 @@
+body, html, #allmap {
+  margin:0;
+  font: 14px '微软雅黑', Helvetica, Arial, sans-serif;
+  color: #333;
+}
+ul,li,dl,dd,dt {
+  margin: 0;
+  padding: 0;
+}
+li{
+  list-style: none;
+}
+a,a:hover{
+  text-decoration: none;
+}
+
+.content{
+  position: absolute;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  top: 0;
+  bottom: 0;
+}
+
+#left-area,#right_area{
+  height: 100%;
+}
+#left-area{
+  overflow: hidden;
+  height: 100%;
+  position: relative;
+  display: block;
+  zoom: 1;
+}
+#right_area{
+  width: 0px;
+  float: right;
+  height: 100%;
+  z-index: 999;
+  position: relative;
+}
+.blockAll{
+  z-index: 9999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #333;
+}
+
+
+.bt-area{
+  z-index: 10;
+  position: absolute;
+  margin-top: -63px;
+  top: 50%;
+  right: 0;
+  display: block;
+  overflow: hidden;
+  width: 32px;
+  height: 125px;
+  background-image: url(../img/bt-area.png);
+  background-repeat: no-repeat;
+}
+.area-open{
+  background-position: -32px 0px;
+}
+
+.area-shadow{
+  z-index: 9;
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  box-shadow: -2px 0px 6px rgba(0,0,0,0.5);
+}
+
+/* @group 右边的信息边框 */
+.panel-group{
+  display: block;
+  width: 334px;
+  padding: 5px;
+}
+.panel-group .panel-title a{
+  display: block;
+  width: 294px;
+  height: 45px;
+  background-image: url(../img/panel-title-bg.png);
+  background-repeat: no-repeat;
+  font-size: 18px;
+  line-height: 45px;
+  padding-left: 40px;
+  color: #fff;
+  font-weight: bold;
+}
+.panel-group .panel-title a.open{
+  background-position: 0px -45px;
+  color: #44B5DF;
+}
+.panel-group .panel-body{
+  position: relative;
+  overflow: hidden;
+  display: block;
+  padding: 10px 0;
+}
+.panel-group .panel-body dt,.panel-group .panel-body dd{
+  line-height: 25px;
+}
+.panel-group .panel-body dt{
+  color: #888;
+  clear: both;
+  float: left;
+  width: 100px;
+  text-align: right;
+}
+.panel-group .panel-body dd{
+  margin-left: 105px;
+  width: 229px;
+}
+.panel-group .panel-body .echart{
+  width: 334px;
+  height: 250px;
+}
+.panel-group .panel-body a.fullChart{
+  z-index: 999;
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-image: url(../img/chart-full.png);
+  background-repeat: no-repeat;
+  background-position: -40px 0px;
+  text-indent: -10000px;
+}
+.panel-group .panel-body a.opened{
+  background-position: 0px 0px;
+}
+/* @end */
+
+/* @group 地图图标点 */
+
+.icon{
+  display: inline-block;
+  width: 41px;
+  height: 52px;
+}
+.icon a{
+  cursor: pointer;
+  display: block;
+  overflow: hidden;
+  width: 41px;
+  height: 52px;
+  background-image: url(../img/icons.png);
+  background-repeat: no-repeat;
+  /*background-attachment: fixed;*/
+}
+
+
+/*原水*/
+.icon-main-gre a{
+  background-position: 0px 0px;
+}
+.icon-main-gre a:hover, .icon-main-gre .selected{
+  background-position: 0px -53px;
+}
+.icon-main-red a{
+  background-position: -43px 0px;
+}
+.icon-main-red a:hover, .icon-main-red .selected{
+  background-position: -43px -53px;
+}
+.icon-main-dashed-gre a{
+  background-position: 0px -157px;
+}
+.icon-main-dashed-gre a:hover, .icon-main-dashed-gre .selected{
+  background-position: 0px -209px;
+}
+.icon-main-dashed-red a{
+  background-position: -43px -157px;
+}
+.icon-main-dashed-red a:hover, .icon-main-dashed-red .selected{
+  background-position: -43px -209px;
+}
+.icon-main-none a{
+  background-position: 0px -105px;
+}
+.icon-main-none a:hover, .icon-main-none .selected{
+  background-position: -43px -105px;
+}
+
+
+/*出厂*/
+.icon-tap-gre a{
+  background-position: -85px 0px;
+}
+.icon-tap-gre a:hover, .icon-tap-gre .selected{
+  background-position: -85px -53px;
+}
+.icon-tap-red a{
+  background-position: -127px 0px;
+}
+.icon-tap-red a:hover, .icon-tap-red .selected{
+  background-position: -127px -53px;
+}
+.icon-tap-dashed-gre a{
+  background-position: -85px -157px;
+}
+.icon-tap-dashed-gre a:hover, .icon-tap-dashed-gre .selected{
+  background-position: -85px -209px;
+}
+.icon-tap-dashed-red a{
+  background-position: -127px -157px;
+}
+.icon-tap-dashed-red a:hover, .icon-tap-dashed-red .selected{
+  background-position: -127px -209px;
+}
+.icon-tap-none a{
+  background-position: -85px -105px;
+}
+.icon-tap-none a:hover, .icon-tap-none .selected{
+  background-position: -127px -105px;
+}
+
+
+/*管网*/
+.icon-raw-gre a{
+  background-position: -169px 0px;
+}
+.icon-raw-gre a:hover, .icon-raw-gre .selected{
+  background-position: -169px -53px;
+}
+.icon-raw-red a{
+  background-position: -211px 0px;
+}
+.icon-raw-red a:hover, .icon-raw-red .selected{
+  background-position: -211px -53px;
+}
+.icon-raw-dashed-gre a{
+  background-position: -169px -157px;
+}
+.icon-raw-dashed-gre a:hover, .icon-raw-dashed-gre .selected{
+  background-position: -169px -209px;
+}
+.icon-raw-dashed-red a{
+  background-position: -211px -157px;
+}
+.icon-raw-dashed-red a:hover, .icon-raw-dashed-red .selected{
+  background-position: -211px -209px;
+}
+.icon-raw-none a{
+  background-position: -169px -105px;
+}
+.icon-raw-none a:hover, .icon-raw-none .selected{
+  background-position: -211px -105px;
+}
+
+
+/*鼠标提示*/
+.icon-info{
+  display: block;
+  width: 214px;
+  height: 156px;
+  overflow: hidden;
+  background-image: url(../img/icon_info.png);
+  background-repeat: no-repeat;
+}
+.icon-info .icon-info-title{
+  font-size: 18px;
+  text-align: center;
+  line-height: 47px;
+}
+.icon-info .icon-info-exp, .icon-info .icon-info-desc{
+  margin-left: 50%;
+  width: 50%;
+  font-size: 14px;
+  text-align: center;
+  line-height: 47px;
+}
+
+/* @end */
+
+
+/* @group 工具条筛选 */
+
+.tool-filer{
+  display: block;
+  width: 509px;
+}
+.tool-filer .tf-icon{
+  cursor: pointer;
+  display: block;
+  width: 86px;
+  height: 86px;
+  overflow: hidden;
+  float: right;
+  background: url(../img/tool-filter-icon.png) no-repeat;
+}
+.tool-filer .tf-icon:hover{
+  background-position: -86px 0px;
+}
+.tool-filer .tf-box{
+  display: none;
+  padding-top: 20px;
+  width: 418px;
+}
+.tool-filer .tf-box .tf-bt-close{
+  margin-left: 363px;
+  cursor: pointer;
+  display: block;
+  width: 53px;
+  height: 49px;
+  overflow: hidden;
+  text-indent: -10000px;
+  background-image: url(../img/tool-filter-bt-close.png);
+  background-repeat: no-repeat;
+}
+.tool-filer .tf-box .tf-bt-close:hover{
+  background-position: -56px 0px;
+}
+.tool-filer .tf-box .tf-tab li{
+  cursor: pointer;
+  display: block;
+  overflow: hidden;
+  width: 104px;
+  height: 44px;
+  float: left;
+  text-indent: -10000px;
+  background-image: url(../img/tool-filter-tab.png);
+  background-repeat: no-repeat;
+}
+.tool-filer .tf-box .tf-tab .tf-tab1{
+  width: 104px;
+}
+.tool-filer .tf-box .tf-tab .tf-tab2{
+  background-position: -104px 0px;
+}
+.tool-filer .tf-box .tf-tab .tf-tab3{
+  width: 103px;
+  background-position: -208px 0px;
+}
+.tool-filer .tf-box .tf-tab .tf-tab4{
+  width: 107px;
+  background-position: -310px 0px;
+}
+.tool-filer .tf-box .tf-tab .selected, .tool-filer .tf-box .tf-tab li:hover{
+  background-position-y: -44px;
+}
+.tool-filer .tf-box .tf-panel{
+  clear: both;
+  font-size: 14px;
+  line-height: 35px;
+  display: none;
+  padding: 8px;
+  background: url(../img/tool-filter-panel-bg.png) no-repeat left bottom;
+}
+.tool-filer .tf-box .tf-panel label{
+  white-space: nowrap;
+}
+.tool-filer .tf-box .tf-panel dl dt{
+  float: left;
+  width: 100px;
+  text-align: right;
+}
+.tool-filer .tf-box .tf-panel dl dd{
+  margin-left: 110px;
+}
+
+/* @end */
+
+
+/* @group 工具条菜单 */
+
+.tool-menu{
+  display: block;
+  overflow: hidden;
+  width: 263px;
+  height: 60px;
+}
+.tool-menu li{
+  float: left;
+}
+.tool-menu li a{
+  display: block;
+  width: 52px;
+  height: 60px;
+  text-indent: -10000px;
+  background: url(../img/tool-menu.png) no-repeat;
+}
+.tool-menu .menu1{
+  background-position: 0px 0px;
+}
+.tool-menu .menu2{
+  background-position: -53px 0px;
+}
+.tool-menu .menu3{
+  background-position: -105px 0px;
+}
+.tool-menu .menu4{
+  background-position: -157px 0px;
+}
+.tool-menu .menu5{
+  background-position: -209px 0px;
+}
+.tool-menu .menu1:hover{
+  background-position: 0px -60px;
+}
+.tool-menu .menu2:hover{
+  background-position: -53px -60px;
+}
+.tool-menu .menu3:hover{
+  background-position: -105px -60px;
+}
+.tool-menu .menu4:hover{
+  background-position: -157px -60px;
+}
+.tool-menu .menu5:hover{
+  background-position: -209px -60px;
+}
+.tool-menu a.selected{
+  background-position-y: -120px;
+}
+.tool-menu a.disenable{
+  background-position-y: -180px;
+}
+.tool-menu a.disenable:hover{
+  background-position-y: -180px;
+}
+
+/* @end */
+
+.win-close{
+  z-index: 99;
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+  text-indent: -10000px;
+  background: url(../img/bt-close.png) no-repeat;
+}
+.win-close:hover{
+  background-position: -31px 0px;
+}
+
+/* @group 信息窗口 */
+
+.win-info,.win-info .win-head,.win-info .win-body,.win-info .win-foot{
+  display: block;
+  overflow: hidden;
+  width: 344px;
+}
+.win-info .win-head{
+  position: relative;
+  height: 35px;
+  background: url(../img/win-head.png) no-repeat;
+}
+.win-info .win-body{
+  width: 334px;
+  padding: 5px;
+  background: url(../img/win-bg.png) no-repeat left bottom;
+  background-position: 0px -50px;
+}
+.win-info .win-body dt,.win-info .win-body dd{
+  line-height: 20px;
+}
+.win-info .win-body dt{
+  float: left;
+  width: 100px;
+  text-align: right;
+}
+.win-info .win-body dd{
+  margin-left: 105px;
+  width: 229px;
+}
+.win-info .win-body hr{
+  clear: both;
+  border-top: solid 1px #ddd;
+  border-bottom: solid 1px #fff;
+}
+.win-info .win-foot{
+  padding: 0 0 20px 0;
+  background: url(../img/win-bg.png) no-repeat left bottom;
+}
+.win-info .win-foot a{
+  text-decoration: none;
+  color: #fff;
+  text-align: center;
+  display: block;
+  line-height: 46px;
+  width: 270px;
+  height: 46px;
+  margin: 0 auto;
+  background: url(../img/bt-bg.png) no-repeat;
+}
+.win-info .win-foot a:hover{
+  text-decoration: none;
+}
+
+/* @end */
+
+/* @group eChart的窗口界面 */
+
+.win-chart,.win-chart .win-head,.win-chart .win-body,.win-chart .win-foot{
+  display: block;
+  overflow: hidden;
+  width: 847px;
+}
+.win-chart{
+  z-index: 99999;
+  position: absolute;
+  margin-top: -239.5px;
+  margin-left: -421.5px;
+  top: 50%;
+  left: 50%;
+  height: 479px;
+  background: url(../img/win-chart-bg.png) no-repeat;
+}
+.win-chart .win-head{
+  position: relative;
+  width: 843px;
+  height: 40px;
+  border-bottom: solid 1px #dfdfdf;
+}
+.win-chart .win-head .win-title{
+  padding: 0 8px;
+  font-size: 16px;
+  line-height: 40px;
+}
+.win-chart .win-body{
+  padding: 10px 15px 10px 10px;
+  width: 822px;
+  height: 416px;
+}
+.win-chart .win-body .echart{
+  display: block;
+  width: 822px;
+  height: 316px;
+}
+.win-chart .win-body .win-chart-tab{
+  float:right;
+  display: block;
+  margin-top: 50px;
+  padding: 10px 15px 15px 10px;
+  width: 131px;
+  height: 192px;
+  background: url(../img/win-chart-tab.png) no-repeat;
+}
+.win-chart .win-body table{
+  clear: both;
+  border: 0;
+  margin: 0;
+  border-collapse: collapse;
+  width: 100%;
+  border-top: solid 1px #dfdfdf;
+}
+.win-chart .win-body table td, .win-chart .win-body table th{
+  padding: 3px;
+  text-align: center;
+  line-height: 25px;
+}
+.win-chart .win-body table tr{
+  border-bottom: solid 2px #fff;
+}
+.win-chart .win-body table .blue{
+  background-color: #24B9F6;
+}
+.win-chart .win-body table .yellow{
+  background-color: #F9FD65;
+}
+.win-chart .win-body table .green{
+  background-color: #91CB5A;
+}
+
+/* @end */
+
+.areaPoint{
+  display:block;
+  width:128px;
+  height:42px;
+}
+.areaPoint .areaName, .areaPoint .areaCount{
+  display:block;
+  line-height:16px;
+  padding:8px 8px
+}
+.areaPoint .areaName{
+  float:left;
+}
+.areaPoint .areaCount{
+  float:right;
+  color:#fff;
+}
+
+
+
+.hide, .panel-group .hide{
+  display: none;
+}
+
