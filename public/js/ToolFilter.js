@@ -606,7 +606,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
           data[$(this).attr('name')].push($(this).val());
         }
       });
-      _dispatchEvent(me, "oncheck", {data:data});
+      _dispatchEvent(me, "onfilter", {data:data});
       _stopAndPrevent(e);
     });
 
@@ -629,7 +629,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
         rawState: data.rawState.join(',')
       };
       */
-      _dispatchEvent(me, "oncheck", {data:data});
+      _dispatchEvent(me, "onfilter", {data:data});
       _stopAndPrevent(e);
     });
   }
