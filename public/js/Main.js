@@ -286,6 +286,8 @@ var MyLib = window.MyLib = MyLib || {};
         for (i in dateArr)
           htmlDate += $.sprintf('<option value="%s">%s</option>', dateArr[i], dateArr[i]);
         lastbody.find('select[name=date]').html(htmlDate);
+        
+        $('.last-body .top input:checkbox[name=s]').iCheck('check');
       }
     , winChartOpen: function(opened){
         var btFull = $('#fullChart');
