@@ -434,6 +434,42 @@ a,a:hover{
 
 /* @end */
 
+.tool-timebar{
+  position: relative;
+  display: block;
+  width: 450px;
+  height: 50px;
+  background-color: #ddd;
+}
+.tool-timebar .btn-control{
+  display: block;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 5px;
+  left: 5px;
+  text-indent: -10000px;
+}
+.tool-timebar .play{
+  background-color: #0F0;
+}
+.tool-timebar .pause{
+  background-color: #000;
+}
+.tool-timebar .btn-drag{
+  display: block;
+  position: absolute;
+  top: 15px;
+  left: 50px;
+  width: 20px;
+  height: 20px;
+  background-color: #F00;
+  text-indent: -10000px;
+}
+
+
+
+
 .win-close{
   z-index: 99;
   display: block;

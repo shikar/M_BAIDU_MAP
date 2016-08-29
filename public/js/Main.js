@@ -5,7 +5,6 @@ var MyLib = window.MyLib = MyLib || {};
     this._pointDatas = pointDatas
     this._map = null
     this.init()
-    console.log("function")
   }
   MyLib.YYSJC.prototype = {
       constructor: MyLib.YYSJC
@@ -25,6 +24,12 @@ var MyLib = window.MyLib = MyLib || {};
     , _toolFilter: null // 工具条 过滤
     , _toolMenu: null // 工具条 菜单
     , _toolEquivalentIcon: null // 工具条 热力图示例
+    , _toolTimeBar: null // 工具条 时间条
+
+    , _interval: null // 时间句柄
+    , _intervalTime: 3000 // 时间间隔
+    , _curPointer: 1 // 当前指针
+    , _maxPointer: 12 // 最大指针
 
     , init: function(){
         this._map = new BMap.Map("allmap",  {minZoom:10, maxZoom:14});
@@ -48,6 +53,12 @@ var MyLib = window.MyLib = MyLib || {};
         this._map.addControl(this._toolEquivalentIcon);
         this._toolEquivalentIcon.hide();
 
+        this._toolTimeBar = new BMapLib.ToolTimeBar();
+        this._map.addControl(this._toolTimeBar);
+        this._toolTimeBar.addEventListener("onselected", $.proxy(this.onTimeBarSelected, this));
+        this._toolTimeBar.hide();
+        
+
         // 信息框整体的缩放展开
         $('.bt-area').on('click', $.proxy(this.onAreaClick, this));
         // 信息框内的 panel 的缩放展开
@@ -59,9 +70,9 @@ var MyLib = window.MyLib = MyLib || {};
         this.main();
       }
 
-
     , main: function(){
         this._toolEquivalentIcon.hide();
+        this._toolTimeBar.hide();
         switch(this._curMenuId)
         {
         case 'menu1':
@@ -76,12 +87,17 @@ var MyLib = window.MyLib = MyLib || {};
           this._myDis.open();
           break;
         case 'menu4':
+          this.addTrend();
+          this._toolTimeBar.reset();
+          this._toolTimeBar.show();
           break;
         case 'menu5':
+          this.addForecast();
+          this._toolTimeBar.reset();
+          this._toolTimeBar.show();
           break;
         };
       }
-
     , addPoints: function(){
         this._map.clearOverlays();
         var datas = this.filertData();
@@ -120,8 +136,16 @@ var MyLib = window.MyLib = MyLib || {};
         this._map.addOverlay(this._heatmapOverlay);
         this._heatmapOverlay.setDataSet({data:points,max:12});
       }
+    , addTrend: function(cp){
+        cp = cp || 1;
+        console.log('Trend:'+cp);
+      }
+    , addForecast: function(cp){
+        cp = cp || 1;
+        console.log('Forecast:'+cp);
+      }
     // 加载所有的监测点
-    , addAllPoints: function(pointDatas) {
+    , addAllPoints: function(pointDatas){
         for (var key in pointDatas) {
           var pointData = pointDatas[key];
           var myRM = new BMapLib.MonitoringPoints(pointData);
@@ -132,7 +156,7 @@ var MyLib = window.MyLib = MyLib || {};
         }
       }
     // 加载区域的监测点
-    , addAreaPoints: function(pointDatas) {
+    , addAreaPoints: function(pointDatas){
         var key,areas = {};
         for (key in pointDatas) {
           var pointData = pointDatas[key];
@@ -311,6 +335,7 @@ var MyLib = window.MyLib = MyLib || {};
 
 
 
+
     , filertData: function(){
         var datas = [];
         if (this._prepoint != null) {
@@ -424,7 +449,7 @@ var MyLib = window.MyLib = MyLib || {};
     , onInfoWinClose: function(e){
         this._prepoint = null;
         this._infoWin = null;
-        this._addPoints();
+        this.addPoints();
       }
     , onAreaClick: function(e){
         var isClose = $('.bt-area').hasClass('area-close')
@@ -451,6 +476,18 @@ var MyLib = window.MyLib = MyLib || {};
       }
     , onChartClose: function(e){
         this.winChartOpen('close');
+      }
+    , onTimeBarSelected: function(e){
+        console.log('selected:'+e.selected);
+        switch(this._curMenuId)
+        {
+        case 'menu4':
+          this.addTrend(e.selected);
+          break;
+        case 'menu5':
+          this.addForecast(e.selected);
+          break;
+        };
       }
   }
 })();

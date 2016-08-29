@@ -343,17 +343,17 @@ var BMapLib = window.BMapLib = BMapLib || {};
   })();
 
   /**
-   * @exports ToolMenu as BMapLib.ToolMenu
+   * @exports ToolTimeBar as BMapLib.ToolTimeBar
    */
-  var ToolMenu =
+  var ToolTimeBar =
   /**
-   * ToolMenu类的构造函数
+   * ToolTimeBar类的构造函数
    * @class 富Marker定义类，实现丰富的Marker展现效果。
    *
    * @constructor
    * @param {String | HTMLElement} content 用户自定义的Marker内容，可以是字符串，也可以是dom节点
    * @param {BMap.Point} position marker的位置
-   * @param {Json} ToolMenuOptions 可选的输入参数，非必填项。可输入选项包括：<br />
+   * @param {Json} ToolTimeBarOptions 可选的输入参数，非必填项。可输入选项包括：<br />
    * {"<b>anchor</b>" : {BMap.Size} Marker的的位置偏移值,
    * <br />"<b>enableDragging</b>" : {Boolean} 是否启用拖拽，默认为false}
    *
@@ -365,10 +365,10 @@ var BMapLib = window.BMapLib = BMapLib || {};
    *              +     "&lt;img src='http://map.baidu.com/img/logo-map.gif' border='0' /&gt;"
    *              + "&lt;/div&gt;";
    * var point = new BMap.Point(116.30816, 40.056863);
-   * var myToolMenuObject = new BMapLib.ToolMenu(htm, point, {"anchor": new BMap.Size(-72, -84), "enableDragging": true});
-   * map.addOverlay(myToolMenuObject);
+   * var myToolTimeBarObject = new BMapLib.ToolTimeBar(htm, point, {"anchor": new BMap.Size(-72, -84), "enableDragging": true});
+   * map.addOverlay(myToolTimeBarObject);
    */
-  BMapLib.ToolMenu = function () {
+  BMapLib.ToolTimeBar = function () {
     /**
      * map对象
      * @private
@@ -381,14 +381,9 @@ var BMapLib = window.BMapLib = BMapLib || {};
      * @private
      * @type {String | HTMLElement}
      */
-    this._content = '<div class="tool-menu">\
-        <ul>\
-          <li><a id="menu1" class="menu1 selected" href="javascript:void(0)">检测点</a></li>\
-          <li><a id="menu2" class="menu2" href="javascript:void(0)">区域水质</a></li>\
-          <li><a id="menu3" class="menu3" href="javascript:void(0)">测距</a></li>\
-          <li><a id="menu4" class="menu4" href="javascript:void(0)">趋势</a></li>\
-          <li><a id="menu5" class="menu5" href="javascript:void(0)">预测</a></li>\
-        </ul>\
+    this._content = '<div class="tool-timebar">\
+        <a class="btn-control play" href="javascript:void(0)">播放</a>\
+        <a class="btn-drag" href="javascript:void(0)">拖动点</a>\
       </div>';
     /**
      * marker主容器
@@ -397,12 +392,21 @@ var BMapLib = window.BMapLib = BMapLib || {};
      */
     this._container = null;
 
+    this._startX = 50;
+    this._maxX = 300;
+    this._dis = 10;
+    this._xOffset = 10;
+
+    this._interval = null; // 时间句柄
+    this._intervalTime = 3000; // 时间间隔
+    this._selected = 1; // 当前选择
+
     this.defaultAnchor = BMAP_ANCHOR_TOP_LEFT;
-    this.defaultOffset = new BMap.Size(10, 10);
+    this.defaultOffset = new BMap.Size(300, 70);
   }
 
   // 继承覆盖物类
-  ToolMenu.prototype = new BMap.Control();
+  ToolTimeBar.prototype = new BMap.Control();
 
   /**
    * 初始化，实现自定义覆盖物的initialize方法
@@ -412,7 +416,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
    * @param {BMap} map map实例对象
    * @return {Dom} 返回自定义生成的dom节点
    */
-  ToolMenu.prototype.initialize = function (map) {
+  ToolTimeBar.prototype.initialize = function (map) {
     var me = this,
         div = me._container = document.createElement("div");
     me._map = map;
@@ -432,7 +436,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
    * @private
    * @return 无返回值
    */
-  ToolMenu.prototype._appendContent = function () {
+  ToolTimeBar.prototype._appendContent = function () {
       var content = this._content;
       // 用户输入的内容是字符串，需要转化成dom节点
       if (typeof content == "string") {
@@ -459,7 +463,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
    * @example <b>参考示例：</b>
    * myMonitoringPointsObject.getContent();
    */
-  ToolMenu.prototype.getContent = function () {
+  ToolTimeBar.prototype.getContent = function () {
       return this._content;
   }
 
@@ -475,7 +479,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
    *              + "&lt;/div&gt;";
    * myMonitoringPointsObject.setContent(htm);
    */
-  ToolMenu.prototype.setContent = function (content) {
+  ToolTimeBar.prototype.setContent = function (content) {
       if (!content) {
           return;
       }
@@ -485,18 +489,33 @@ var BMapLib = window.BMapLib = BMapLib || {};
       this._appendContent();
   }
 
+  ToolTimeBar.prototype.reset = function () {
+    var px = 0,
+        drag = $(this._container).find('.btn-drag');
+    this.stopInterval();
+    this._selected = 1;
+    px = (this._selected-1)*this._dis+this._startX;
+    drag.css('left', px+'px');
+  }
+
+  ToolTimeBar.prototype.stopInterval = function () {
+    if (this._interval != null) {
+      clearInterval(this._interval);
+      this._interval = null;
+    }
+  }
   /**
    * 设置Marker的各种事件
    *
    * @private
    * @return 无返回值
    */
-  ToolMenu.prototype._setEventDispath = function () {
+  ToolTimeBar.prototype._setEventDispath = function () {
     var me = this,
         div = me._container,
         isMouseDown = false,
+        selected = 1;
         // 鼠标是否按下，用以判断鼠标移动过程中的拖拽计算
-        startPosition = null; // 拖拽时，鼠标按下的初始位置，拖拽的辅助计算参数
 
     // 通过e参数获取当前鼠标所在位置
     function _getPositionByEvent(e) {
@@ -510,22 +529,69 @@ var BMapLib = window.BMapLib = BMapLib || {};
             "point": point
         };
     }
-    function _tabEvent(e){
-      var id = e.target.id;
-      if (id != 'menu3') {
-        $('.tool-menu a').removeClass('selected');
-        $('.tool-menu a.'+id).addClass('selected');
-      }
-      _dispatchEvent(me, "onmenu", {id:id});
+    function _getOffsetByEvent(e) {
+      var e = window.event || e,
+          p = $(me._container).offset(),
+          x = e.pageX || e.clientX || 0,
+          x = x - p.left,
+          y = e.pageY || e.clientY || 0,
+          y = y - p.top;
+      return new BMap.Pixel(x, y);
+    }
+    function _timeprogress(e){
+      var px = 0,
+          drag = $(me._container).find('.btn-drag');
+      me._selected++;
+      if (me._selected > 26) me._selected = 1;
+      px = (me._selected-1)*me._dis+me._startX;
+      drag.css('left', px+'px');
+      _dispatchEvent(me, "onselected", {selected:me._selected});
+    }
+
+    function _controlEvent(e){
+      var cur = $(e.target);
+      me.stopInterval();
+      if (cur.hasClass('play')) {
+        cur.removeClass('play').addClass('pause');
+        me._interval = window.setInterval(_timeprogress, me._intervalTime)
+      } else
+        cur.removeClass('pause').addClass('play');
+      _stopAndPrevent(e);
+    }
+    function _dragDownEvent(e){
+      isMouseDown = true;
+      _stopAndPrevent(e);
+    }
+    function _dragMoveEvent(e){
+      if (isMouseDown == false) return;
+      var p = _getOffsetByEvent(e),
+          px = p.x-me._xOffset,
+          drag = $(me._container).find('.btn-drag');
+      if (px <= me._startX) px = me._startX;
+      else if (px >= me._maxX) px = me._maxX;
+      drag.css('left', px+'px');
+      _stopAndPrevent(e);
+    }
+    function _dragUpEvent(e){
+      isMouseDown = false;
+      var p = _getOffsetByEvent(e),
+          px = p.x,
+          drag = $(me._container).find('.btn-drag');
+      if (px <= me._startX) px = me._startX;
+      else if (px >= me._maxX) px = me._maxX;
+      me._selected = Math.floor((px-me._startX)/me._dis)+1;
+      px = (me._selected-1)*me._dis+me._startX;
+      drag.css('left', px+'px');
+      _dispatchEvent(me, "onselected", {selected:me._selected});
       _stopAndPrevent(e);
     }
 
-
-    baidu.on('menu1','onclick', _tabEvent);
-    baidu.on('menu2','onclick', _tabEvent);
-    baidu.on('menu3','onclick', _tabEvent);
-    baidu.on('menu4','onclick', _tabEvent);
-    baidu.on('menu5','onclick', _tabEvent);
+    baidu.on($(div).find('.btn-control')[0], 'onmouseup', _controlEvent);
+    baidu.on($(div).find('.btn-drag')[0], 'onmousedown', _dragDownEvent);
+    baidu.on($(div).find('.btn-drag')[0], 'mousemove', _dragMoveEvent);
+    baidu.on(div, 'mousemove', _dragMoveEvent);
+    baidu.on(div, 'onmouseup', _dragUpEvent);
+    baidu.on($(div).find('.btn-drag')[0], 'onmouseup', _dragUpEvent);
   }
 
 
