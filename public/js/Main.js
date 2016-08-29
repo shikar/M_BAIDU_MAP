@@ -286,7 +286,7 @@ var MyLib = window.MyLib = MyLib || {};
         for (i in dateArr)
           htmlDate += $.sprintf('<option value="%s">%s</option>', dateArr[i], dateArr[i]);
         lastbody.find('select[name=date]').html(htmlDate);
-        
+
         $('.last-body .top input:checkbox[name=s]').iCheck('check');
       }
     , winChartOpen: function(opened){
@@ -489,12 +489,20 @@ var MyLib = window.MyLib = MyLib || {};
         $("#right_area").animate({width:(isClose?'345':'0')+'px'},100);
       }
     , onPanelCollapse: function(e){
+        /*
         var cur = $(e.currentTarget)
           , isOpen = cur.hasClass('open')
           , body = cur.parent().parent().find('.panel-body');
         if (isOpen) cur.removeClass('open');
         else cur.addClass('open');
         body.slideToggle({progress:$.proxy(this.onPanelCollapseProgress, this)});
+        */
+        var cur = $(e.currentTarget)
+          , body = cur.parent().parent().find('.panel-body');
+        $('.panel-title a').removeClass('open');
+        cur.addClass('open');
+        $('.panel-body').slideUp({progress:$.proxy(this.onPanelCollapseProgress, this)});
+        body.clearQueue().slideDown({progress:$.proxy(this.onPanelCollapseProgress, this)});
       }
     , onPanelCollapseProgress: function(){
         var panels = $('.panel-group')
