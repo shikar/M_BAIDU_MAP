@@ -82,8 +82,11 @@ a,a:hover{
 /* @group 右边的信息边框 */
 .panel-group{
   display: block;
-  width: 334px;
-  padding: 5px;
+  width: 344px;
+  height: 100%;
+}
+.panel-group .panel{
+  margin: 5px 5px 0 5px;
 }
 .panel-group .panel-title a{
   display: block;
@@ -123,7 +126,7 @@ a,a:hover{
 }
 .panel-group .panel-body .echart{
   width: 334px;
-  height: 250px;
+  height: 200px;
 }
 .panel-group .panel-body a.fullChart{
   z-index: 999;

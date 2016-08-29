@@ -63,6 +63,7 @@ var MyLib = window.MyLib = MyLib || {};
         $('.bt-area').on('click', $.proxy(this.onAreaClick, this));
         // 信息框内的 panel 的缩放展开
         $('.panel-title a').on('click', $.proxy(this.onPanelCollapse, this));
+        $(window).on('resize', $.proxy(this.onPanelCollapseProgress, this));
         // echart 的放大缩小
         $('#fullChart').on('click', $.proxy(this.onChartOpen, this));
         $('.win-chart .win-close').on('click', $.proxy(this.onChartClose, this));
@@ -465,7 +466,13 @@ var MyLib = window.MyLib = MyLib || {};
           , body = cur.parent().parent().find('.panel-body');
         if (isOpen) cur.removeClass('open');
         else cur.addClass('open');
-        body.slideToggle();
+        body.slideToggle({progress:$.proxy(this.onPanelCollapseProgress, this)});
+      }
+    , onPanelCollapseProgress: function(){
+        var panels = $('.panel-group')
+          , lastPanel = panels.find('.panel:last .last-body')
+          , lastPanelPoint = lastPanel.offset();
+        lastPanel.css('height', (panels.height()-lastPanelPoint.top-15)+'px');
       }
     , onChartOpen: function(e){
         var btFull = $('#fullChart');
