@@ -13,6 +13,11 @@ li{
 a,a:hover{
   text-decoration: none;
 }
+table{
+  border: 0;
+  margin: 0;
+  border-collapse: collapse;
+}
 
 .content{
   position: absolute;
@@ -126,7 +131,7 @@ a,a:hover{
 }
 .panel-group .panel-body .echart{
   width: 334px;
-  height: 200px;
+  height: 150px;
 }
 .panel-group .panel-body a.fullChart{
   z-index: 999;
@@ -143,6 +148,39 @@ a,a:hover{
 }
 .panel-group .panel-body a.opened{
   background-position: 0px 0px;
+}
+
+.panel-group .panel-body .last-body .top{
+  line-height: 30px;
+}
+.panel-group .panel-body .last-body .top .btn-reset{
+  display: inline-block;
+  width: 85px;
+  height: 38px;
+  text-indent: -10000px;
+  background: url(../img/bt-reset.png) no-repeat;
+}
+.panel-group .panel-body .last-body .top .btn-reset:hover{
+  background-position: -85px 0px;
+}
+.panel-group .panel-body .last-body .bottom{
+  position: absolute;
+  width: 100%;
+  top: 110px;
+  bottom: 0;
+  overflow-y: scroll;
+}
+.panel-group .panel-body .last-body .bottom table{
+  width: 100%;
+}
+.panel-group .panel-body .last-body .bottom table th, .panel-group .panel-body .last-body .bottom table td{
+  line-height: 30px;
+}
+.panel-group .panel-body .last-body .bottom table th{
+  background-color: #ddd;
+}
+.panel-group .panel-body .last-body .bottom table td{
+  border-top: solid 1px #ccc;
 }
 /* @end */
 
@@ -594,9 +632,6 @@ a,a:hover{
 }
 .win-chart .win-body table{
   clear: both;
-  border: 0;
-  margin: 0;
-  border-collapse: collapse;
   width: 100%;
   border-top: solid 1px #dfdfdf;
 }

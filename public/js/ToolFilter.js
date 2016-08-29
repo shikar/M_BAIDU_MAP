@@ -596,12 +596,12 @@ var BMapLib = window.BMapLib = BMapLib || {};
     baidu.on($('.tf-tab3')[0],'onclick', _tabEvent);
     baidu.on($('.tf-tab4')[0],'onclick', _tabEvent);
 
-    $('input:checkbox[name=selectAll]').on('ifChanged', function(e){
+    $('.tool-filer input:checkbox[name=selectAll]').on('ifChanged', function(e){
       var t = $(e.currentTarget)
-        , els = t.parents('.tf-panel').find('input:checkbox[name!=selectAll]')
+        , els = t.parents('.tf-panel').find('.tool-filer input:checkbox[name!=selectAll]')
         , data = {areaName:[],prepoint:[],lvl:[],pcf:[],tapState:[],mtd:[],rawState:[]};
       els.iCheck(t.prop('checked')?'check':'uncheck');
-      $('input:checkbox[name!=selectAll]').each(function(){
+      $('.tool-filer input:checkbox[name!=selectAll]').each(function(){
         if ($(this).prop('checked') == true) {
           data[$(this).attr('name')].push($(this).val());
         }
@@ -610,10 +610,10 @@ var BMapLib = window.BMapLib = BMapLib || {};
       _stopAndPrevent(e);
     });
 
-    $('input:checkbox[name!=selectAll]').on('ifClicked', function(e){
+    $('.tool-filer input:checkbox[name!=selectAll]').on('ifClicked', function(e){
       $(e.currentTarget).prop('checked', !$(e.currentTarget).prop('checked'));
       var data = {areaName:[],prepoint:[],lvl:[],pcf:[],tapState:[],mtd:[],rawState:[]};
-      $('input:checkbox[name!=selectAll]').each(function(){
+      $('.tool-filer input:checkbox[name!=selectAll]').each(function(){
         if ($(this).prop('checked') == true) {
           data[$(this).attr('name')].push($(this).val());
         }

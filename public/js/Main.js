@@ -26,17 +26,11 @@ var MyLib = window.MyLib = MyLib || {};
     , _toolEquivalentIcon: null // 工具条 热力图示例
     , _toolTimeBar: null // 工具条 时间条
 
-    , _interval: null // 时间句柄
-    , _intervalTime: 3000 // 时间间隔
-    , _curPointer: 1 // 当前指针
-    , _maxPointer: 12 // 最大指针
-
     , init: function(){
         this._map = new BMap.Map("allmap",  {minZoom:10, maxZoom:14});
         this._myDis = new BMapLib.DistanceTool(this._map);
         this._map.centerAndZoom("上海", 12);
         this._map.enableScrollWheelZoom(true);
-
         this._map.addEventListener("zoomend", $.proxy(this.onZoomend, this));
 
 
@@ -57,7 +51,7 @@ var MyLib = window.MyLib = MyLib || {};
         this._map.addControl(this._toolTimeBar);
         this._toolTimeBar.addEventListener("onselected", $.proxy(this.onTimeBarSelected, this));
         this._toolTimeBar.hide();
-        
+
 
         // 信息框整体的缩放展开
         $('.bt-area').on('click', $.proxy(this.onAreaClick, this));
@@ -69,6 +63,7 @@ var MyLib = window.MyLib = MyLib || {};
         $('.win-chart .win-close').on('click', $.proxy(this.onChartClose, this));
 
         this.main();
+        this.onPanelCollapseProgress();
       }
 
     , main: function(){
@@ -260,6 +255,37 @@ var MyLib = window.MyLib = MyLib || {};
           }]
         };
         eChart.setOption(option, true);
+
+        this.addJVInfo(pointsJVData);
+        $('.last-body .top input:checkbox[name=s]').on('ifChanged', $.proxy(this.onRefreshJVInfo, this, pointsJVData));
+        $('.last-body .top select').on('change', $.proxy(this.onRefreshJVInfo, this, pointsJVData));
+        $('.last-body .top .btn-reset').on('click', $.proxy(this.onJVReset, this, pointsJVData));
+
+        this.onRefreshJVInfo(pointsJVData);
+        this.onPanelCollapseProgress();
+      }
+    , addJVInfo: function(jvData){
+        var i,j,curLsn,curLsv,curLsvn,
+            htmlLsn = '<option value="all">所有</option>',
+            htmlDate = '',
+            lsnArr = [],
+            dateArr = []
+            lastbody = $('.last-body .top');
+        for (i in jvData) {
+          if (dateArr.indexOf(jvData[i].date) == -1) dateArr.push(jvData[i].date);
+          for (j in jvData[i].lsn) {
+            curLsn = jvData[i].lsn[j];
+            curLsv = jvData[i].lsv[j];
+            curLsvn = jvData[i].lsvn[j];
+            if (lsnArr.indexOf(curLsn) == -1) lsnArr.push(curLsn);
+          }
+        }
+        for (i in lsnArr)
+          htmlLsn += $.sprintf('<option value="%s">%s</option>', lsnArr[i], lsnArr[i]);
+        lastbody.find('select[name=lsn]').html(htmlLsn);
+        for (i in dateArr)
+          htmlDate += $.sprintf('<option value="%s">%s</option>', dateArr[i], dateArr[i]);
+        lastbody.find('select[name=date]').html(htmlDate);
       }
     , winChartOpen: function(opened){
         var btFull = $('#fullChart');
@@ -495,6 +521,40 @@ var MyLib = window.MyLib = MyLib || {};
           this.addForecast(e.selected);
           break;
         };
+      }
+    , onRefreshJVInfo: function(jvData){
+        var i,j,
+            lastbody = $('.last-body .top'),
+            sVal = []
+            lsnVal = lastbody.find('select[name=lsn]').val(),
+            dateVal = lastbody.find('select[name=date]').val(),
+            trhtml = '';
+
+        lastbody.find('input:checkbox:checked').each(function(){
+          sVal.push($(this).val());
+        });
+
+        for (i in jvData){
+          if (sVal.indexOf(jvData[i].s) == -1) continue;
+          if (jvData[i].date != dateVal) continue;
+          for (j in jvData[i].lsn){
+            if (lsnVal == 'all' || jvData[i].lsn[j] == lsnVal) {
+              trhtml += $.sprintf(
+                '<tr><td>%s</td><td>%s<img style="vertical-align:middle" src="img/icon_%s.png"></td><td>%s</td></tr>',
+                jvData[i].lsn[j],
+                jvData[i].lsv[j],
+                jvData[i].lsvn[j] == '合格'?'y':'n',
+                jvData[i].date
+              );
+            }
+          }
+          if (trhtml != '') break;
+        }
+        $('.last-body .bottom tbody').html(trhtml);
+      }
+    , onJVReset: function(jvData){
+        this.addJVInfo(jvData);
+        this.onRefreshJVInfo(jvData);
       }
   }
 })();

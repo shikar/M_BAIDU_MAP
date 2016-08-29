@@ -176,7 +176,45 @@
     </div>
     <div class="panel">
       <div class="panel-title"><a href="javascript:void(0)">检测信息</a></div>
-      <div class="panel-body"></div>
+      <div class="panel-body">
+        <div class="last-body">
+          <div class="top">
+            <span style="color:#44B5DF;">数据来源:</span>
+            <label><input type="checkbox" name="s" value="监督机构" checked> 监督机构</label>
+            <label><input type="checkbox" name="s" value="水务部门" checked> 水务部门</label>
+            <label><input type="checkbox" name="s" value="供水单位" checked> 供水单位</label>
+            <br>
+            指标: 
+            <select name="lsn">
+              <option value="all">所有</option>
+              <option value="氯气及游离氯制剂">氯气及游离氯制剂</option>
+            </select>
+            时间:
+            <select name="date">
+              <option value="all">2016-01-26</option>
+            </select>
+            <a class="btn-reset" href="javascript:void(0)">重置</a>
+          </div>
+          <div class="bottom">
+            <table>
+              <thead>
+                <tr>
+                  <th>检测指标</th>
+                  <th>检测值</th>
+                  <th>检测时间</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
