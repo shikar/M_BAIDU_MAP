@@ -478,34 +478,35 @@ table{
 .tool-timebar{
   position: relative;
   display: block;
-  width: 450px;
-  height: 50px;
-  background-color: #ddd;
+  width: 709px;
+  height: 58px;
+  background: url(../img/tb-bg.png) no-repeat;
 }
 .tool-timebar .btn-control{
   display: block;
   position: absolute;
-  width: 40px;
-  height: 40px;
-  top: 5px;
-  left: 5px;
+  width: 42px;
+  height: 42px;
+  top: 8px;
+  left: 8px;
   text-indent: -10000px;
+  background: url(../img/tb-control.png) no-repeat;
 }
 .tool-timebar .play{
-  background-color: #0F0;
+  background-position: 0 0;
 }
 .tool-timebar .pause{
-  background-color: #000;
+  background-position: -42px 0;
 }
 .tool-timebar .btn-drag{
   display: block;
   position: absolute;
-  top: 15px;
-  left: 50px;
-  width: 20px;
-  height: 20px;
-  background-color: #F00;
+  top: 8px;
+  left: 60px;
+  width: 29px;
+  height: 29px;
   text-indent: -10000px;
+  background: url(../img/tb-drag.png) no-repeat;
 }
 
 

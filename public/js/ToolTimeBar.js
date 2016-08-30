@@ -392,10 +392,10 @@ var BMapLib = window.BMapLib = BMapLib || {};
      */
     this._container = null;
 
-    this._startX = 50;
-    this._maxX = 300;
-    this._dis = 10;
-    this._xOffset = 10;
+    this._startX = 60;
+    this._maxX = 520;
+    this._dis = 30;
+    this._xOffset = 14;
 
     this._interval = null; // 时间句柄
     this._intervalTime = 3000; // 时间间隔
@@ -577,6 +577,8 @@ var BMapLib = window.BMapLib = BMapLib || {};
       var p = _getOffsetByEvent(e),
           px = p.x,
           drag = $(me._container).find('.btn-drag');
+
+      if (px <= me._startX-10 || px >= me._maxX+10) return;
       if (px <= me._startX) px = me._startX;
       else if (px >= me._maxX) px = me._maxX;
       me._selected = Math.floor((px-me._startX)/me._dis)+1;
@@ -586,7 +588,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
       _stopAndPrevent(e);
     }
 
-    baidu.on($(div).find('.btn-control')[0], 'onmouseup', _controlEvent);
+    baidu.on($(div).find('.btn-control')[0], 'onclick', _controlEvent);
     baidu.on($(div).find('.btn-drag')[0], 'onmousedown', _dragDownEvent);
     baidu.on($(div).find('.btn-drag')[0], 'mousemove', _dragMoveEvent);
     baidu.on(div, 'mousemove', _dragMoveEvent);
