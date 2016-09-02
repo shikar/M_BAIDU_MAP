@@ -368,13 +368,14 @@ var BMapLib = window.BMapLib = BMapLib || {};
    * var myToolTimeBarObject = new BMapLib.ToolTimeBar(htm, point, {"anchor": new BMap.Size(-72, -84), "enableDragging": true});
    * map.addOverlay(myToolTimeBarObject);
    */
-  BMapLib.ToolTimeBar = function () {
+  BMapLib.ToolTimeBar = function (data) {
     /**
      * map对象
      * @private
      * @type {Map}
      */
     this._map = null;
+    this._data = data;
 
     /**
      * Marker内容

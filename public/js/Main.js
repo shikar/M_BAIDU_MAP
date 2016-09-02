@@ -1,14 +1,15 @@
 var MyLib = window.MyLib = MyLib || {};
 (function(){
-  var YYSJC = MyLib.YYSJC = function (pointDatas) {
+  var YYSJC = MyLib.YYSJC = function (pointDatas, pointAllDatas) {
     if (!pointDatas) return
-    this._pointDatas = pointDatas
-    this._map = null
+    this._data = this._pointDatas = pointDatas
+    this._pointAllDatas = pointAllDatas
     this.init()
   }
   MyLib.YYSJC.prototype = {
       constructor: MyLib.YYSJC
-    , _params: null // 数据
+    , _pointAllDatas: null // 趋势和预测
+    , _data: null // 数据
     , _prepoint: null // 管水厂水 父级
     , _curMenuId: 'menu1' // 当前菜单号
     , _curChartData: null // 地图点 eChart 数据
@@ -47,7 +48,7 @@ var MyLib = window.MyLib = MyLib || {};
         this._map.addControl(this._toolEquivalentIcon);
         this._toolEquivalentIcon.hide();
 
-        this._toolTimeBar = new BMapLib.ToolTimeBar();
+        this._toolTimeBar = new BMapLib.ToolTimeBar(this._pointAllDatas);
         this._map.addControl(this._toolTimeBar);
         this._toolTimeBar.addEventListener("onselected", $.proxy(this.onTimeBarSelected, this));
         this._toolTimeBar.hide();
@@ -376,12 +377,12 @@ var MyLib = window.MyLib = MyLib || {};
           for (var key in this._pointDatas) {
             var point = this._pointDatas[key];
             var pass = true;
-            if (point.type == 0 && pointFilterData.prepoint.indexOf(point.name) == -1) pass = false;
-            if (pointFilterData.areaName.indexOf(point.areaName) == -1) pass = false;
-            if (point.type == 1 && pointFilterData.lvl.indexOf(point.lvl) == -1) pass = false;
-            if (point.type == 2 && pointFilterData.mtd.indexOf(point.mtd) == -1) pass = false;
-            if (point.type == 1 && pointFilterData.tapState.indexOf(point.state) == -1) pass = false;
-            if (point.type == 2 && pointFilterData.rawState.indexOf(point.state) == -1) pass = false;
+            if (point.type == 0 && this._pointFilterData.prepoint.indexOf(point.name) == -1) pass = false;
+            if (this._pointFilterData.areaName.indexOf(point.areaName) == -1) pass = false;
+            if (point.type == 1 && this._pointFilterData.lvl.indexOf(point.lvl) == -1) pass = false;
+            if (point.type == 2 && this._pointFilterData.mtd.indexOf(point.mtd) == -1) pass = false;
+            if (point.type == 1 && this._pointFilterData.tapState.indexOf(point.state) == -1) pass = false;
+            if (point.type == 2 && this._pointFilterData.rawState.indexOf(point.state) == -1) pass = false;
             if (pass == true) datas.push(point);
           }
         } else {

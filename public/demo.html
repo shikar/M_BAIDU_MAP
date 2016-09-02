@@ -12,6 +12,7 @@
   <script type="text/javascript" src="js/jquery.sprintf.min.js"></script>
   <script type="text/javascript" src="js/icheck.min.js"></script>
   <script type="text/javascript" src="js/PointsData.js"></script>
+  <script type="text/javascript" src="js/PointAllDatas.js"></script>
   <script type="text/javascript" src="js/PointsJVData.js"></script>
   <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=BP8iUvjr9G2qm5zYcmFLA6f4GyXNZEer"></script>
   <script type="text/javascript" src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
@@ -159,7 +160,7 @@
 </html>
 <script>
 $(document).ready(function(){
-  var map = new MyLib.YYSJC(pointDatas);
+  var map = new MyLib.YYSJC(pointDatas, pointAllDatas);
 
   $('input').iCheck({
     checkboxClass: 'icheckbox_flat-blue',
