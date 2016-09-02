@@ -127,7 +127,7 @@ var MyLib = window.MyLib = MyLib || {};
           });
         } else {
           this._heatmapOverlay.setOptions({
-            "radius": 80*(map.getZoom()-9)/2
+            "radius": 80*(this._map.getZoom()-9)/2
           });
         }
         this._map.addOverlay(this._heatmapOverlay);
