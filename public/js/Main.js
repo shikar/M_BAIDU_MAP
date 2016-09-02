@@ -48,7 +48,7 @@ var MyLib = window.MyLib = MyLib || {};
         this._map.addControl(this._toolEquivalentIcon);
         this._toolEquivalentIcon.hide();
 
-        this._toolTimeBar = new BMapLib.ToolTimeBar(this._pointAllDatas);
+        this._toolTimeBar = new BMapLib.ToolTimeBar();
         this._map.addControl(this._toolTimeBar);
         this._toolTimeBar.addEventListener("onselected", $.proxy(this.onTimeBarSelected, this));
         this._toolTimeBar.hide();
@@ -85,12 +85,12 @@ var MyLib = window.MyLib = MyLib || {};
           break;
         case 'menu4':
           this.addTrend();
-          this._toolTimeBar.reset();
+          this._toolTimeBar.reset(this._pointAllDatas);
           this._toolTimeBar.show();
           break;
         case 'menu5':
           this.addForecast();
-          this._toolTimeBar.reset();
+          this._toolTimeBar.reset(this._pointAllDatas);
           this._toolTimeBar.show();
           break;
         };
@@ -133,19 +133,24 @@ var MyLib = window.MyLib = MyLib || {};
         this._map.addOverlay(this._heatmapOverlay);
         this._heatmapOverlay.setDataSet({data:points,max:12});
       }
-    , addTrend: function(cp){
+    , addTrend: function(cp,data){
         cp = cp || 1;
         console.log('Trend:'+cp);
+        this._pointDatas = data;
+        this.addPoints();
       }
-    , addForecast: function(cp){
+    , addForecast: function(cp,data){
         cp = cp || 1;
         console.log('Forecast:'+cp);
+        this._pointDatas = data;
+        this.addPoints();
       }
     // 加载所有的监测点
     , addAllPoints: function(pointDatas){
         for (var key in pointDatas) {
           var pointData = pointDatas[key];
-          var myRM = new BMapLib.MonitoringPoints(pointData);
+          var dashed = (this._curMenuId=='menu4'||this._curMenuId=='menu5'?true:false)
+          var myRM = new BMapLib.MonitoringPoints(pointData, dashed);
           myRM.addEventListener("onmouseover", $.proxy(this.onMonitoringOver, this));
           myRM.addEventListener("onmouseout", $.proxy(this.onMonitoringOut, this));
           myRM.addEventListener("onclick", $.proxy(this.onMonitoringClick, this));
@@ -526,10 +531,10 @@ var MyLib = window.MyLib = MyLib || {};
         switch(this._curMenuId)
         {
         case 'menu4':
-          this.addTrend(e.selected);
+          this.addTrend(e.selected,e.data);
           break;
         case 'menu5':
-          this.addForecast(e.selected);
+          this.addForecast(e.selected,e.data);
           break;
         };
       }

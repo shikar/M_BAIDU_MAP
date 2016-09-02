@@ -508,8 +508,22 @@ table{
   text-indent: -10000px;
   background: url(../img/tb-drag.png) no-repeat;
 }
-
-
+.tool-timebar .drag-lab{
+  display: block;
+  position: absolute;
+  top: 37px;
+  left: 75px;
+  width: 460px;
+}
+.tool-timebar .drag-lab .lab-item{
+  display: block;
+  position: absolute;
+  left: 0;
+  float: left;
+  text-align: center;
+  width: 80px;
+  font-size: 11px;
+}
 
 
 .win-close{

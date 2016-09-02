@@ -368,14 +368,15 @@ var BMapLib = window.BMapLib = BMapLib || {};
    * var myToolTimeBarObject = new BMapLib.ToolTimeBar(htm, point, {"anchor": new BMap.Size(-72, -84), "enableDragging": true});
    * map.addOverlay(myToolTimeBarObject);
    */
-  BMapLib.ToolTimeBar = function (data) {
+  BMapLib.ToolTimeBar = function () {
     /**
      * map对象
      * @private
      * @type {Map}
      */
     this._map = null;
-    this._data = data;
+    this._data = null;
+    this._keys = null;
 
     /**
      * Marker内容
@@ -384,6 +385,13 @@ var BMapLib = window.BMapLib = BMapLib || {};
      */
     this._content = '<div class="tool-timebar">\
         <a class="btn-control play" href="javascript:void(0)">播放</a>\
+        <div class="drag-lab">\
+          <div class="lab-item">2016-01-01</div>\
+          <div class="lab-item">2016-02-01</div>\
+          <div class="lab-item">2016-03-01</div>\
+          <div class="lab-item">2016-04-01</div>\
+          <div class="lab-item">2016-05-01</div>\
+        </div>\
         <a class="btn-drag" href="javascript:void(0)">拖动点</a>\
       </div>';
     /**
@@ -490,13 +498,32 @@ var BMapLib = window.BMapLib = BMapLib || {};
       this._appendContent();
   }
 
-  ToolTimeBar.prototype.reset = function () {
+  ToolTimeBar.prototype.reset = function (data) {
     var px = 0,
         drag = $(this._container).find('.btn-drag');
+    this.formatData(data);
     this.stopInterval();
     this._selected = 1;
     px = (this._selected-1)*this._dis+this._startX;
     drag.css('left', px+'px');
+    _dispatchEvent(this, "onselected", {selected:this._selected,data:this._data[this._selected-1][this._keys[this._selected-1]]});
+  }
+
+  ToolTimeBar.prototype.formatData = function (data) {
+    this._data = data;
+    this._keys = [];
+    var i,j,html = '';
+
+    for (i in data)
+      for (j in data[i])
+        this._keys.push(j);
+
+    for (i in this._keys)
+      html += $.sprintf('<div class="lab-item" style="left:%spx">%s</div>', 460/(this._keys.length-1)*i-40, this._keys[i]);
+
+    $(this._container).find('.drag-lab').html(html);
+
+    this._dis = (this._maxX-this._startX)/(this._keys.length-1);
   }
 
   ToolTimeBar.prototype.stopInterval = function () {
@@ -543,10 +570,10 @@ var BMapLib = window.BMapLib = BMapLib || {};
       var px = 0,
           drag = $(me._container).find('.btn-drag');
       me._selected++;
-      if (me._selected > 26) me._selected = 1;
+      if (me._selected > me._keys.length) me._selected = 1;
       px = (me._selected-1)*me._dis+me._startX;
       drag.css('left', px+'px');
-      _dispatchEvent(me, "onselected", {selected:me._selected});
+      _dispatchEvent(me, "onselected", {selected:me._selected,data:me._data[me._selected-1][me._keys[me._selected-1]]});
     }
 
     function _controlEvent(e){
@@ -566,7 +593,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
     function _dragMoveEvent(e){
       if (isMouseDown == false) return;
       var p = _getOffsetByEvent(e),
-          px = p.x-me._xOffset,
+          px = p.x,
           drag = $(me._container).find('.btn-drag');
       if (px <= me._startX) px = me._startX;
       else if (px >= me._maxX) px = me._maxX;
@@ -576,16 +603,18 @@ var BMapLib = window.BMapLib = BMapLib || {};
     function _dragUpEvent(e){
       isMouseDown = false;
       var p = _getOffsetByEvent(e),
-          px = p.x,
+          px = p.x+me._dis/2-me._xOffset,
           drag = $(me._container).find('.btn-drag');
 
-      if (px <= me._startX-10 || px >= me._maxX+10) return;
+      if (px <= me._startX-10 || px >= me._maxX+me._dis/2+10) return;
       if (px <= me._startX) px = me._startX;
-      else if (px >= me._maxX) px = me._maxX;
+      else if (px >= me._maxX+me._dis) px = me._maxX;
+
+
       me._selected = Math.floor((px-me._startX)/me._dis)+1;
       px = (me._selected-1)*me._dis+me._startX;
       drag.css('left', px+'px');
-      _dispatchEvent(me, "onselected", {selected:me._selected});
+      _dispatchEvent(me, "onselected", {selected:me._selected,data:me._data[me._selected-1][me._keys[me._selected-1]]});
       _stopAndPrevent(e);
     }
 

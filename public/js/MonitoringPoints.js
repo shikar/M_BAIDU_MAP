@@ -343,11 +343,11 @@ var BMapLib = window.BMapLib = BMapLib || {};
   })();
 
 
-  function _getIconName(params) {
+  function _getIconName(params, dashed) {
     var type = {0:'main',1:'tap',2:'raw'};
     var exponential = params.exponential <= 0.4 ? 'gre' : 'red';
     if (params.state == "离线") exponential = 'none';
-    return 'icon-' + type[params.type] + '-' + exponential;
+    return 'icon-' + type[params.type] + (dashed?'-dashed':'') + '-' + exponential;
   }
   /**
    * @exports MonitoringPoints as BMapLib.MonitoringPoints
@@ -375,11 +375,12 @@ var BMapLib = window.BMapLib = BMapLib || {};
    * var myMonitoringPointsObject = new BMapLib.MonitoringPoints(htm, point, {"anchor": new BMap.Size(-72, -84), "enableDragging": true});
    * map.addOverlay(myMonitoringPointsObject);
    */
-  BMapLib.MonitoringPoints = function (params) {
+  BMapLib.MonitoringPoints = function (params, dashed) {
     if (!params) {
       return;
     }
     this._params = params;
+    this._dashed = dashed;
     /**
      * map对象
      * @private
@@ -392,7 +393,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
      * @private
      * @type {String | HTMLElement}
      */
-    this._content = '<div class="icon ' + _getIconName(params) + '"><a href="javascript:void(0)"></a></div>';
+    this._content = '<div class="icon ' + _getIconName(params, dashed) + '"><a href="javascript:void(0)"></a></div>';
 
     /**
      * marker显示位置
