@@ -598,7 +598,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
 
     $('.tool-filer input:checkbox[name=selectAll]').on('ifChanged', function(e){
       var t = $(e.currentTarget)
-        , els = t.parents('.tf-panel').find('.tool-filer input:checkbox[name!=selectAll]')
+        , els = t.parents('.tf-panel').find('input:checkbox[name!=selectAll]')
         , data = {areaName:[],prepoint:[],lvl:[],pcf:[],tapState:[],mtd:[],rawState:[]};
       els.iCheck(t.prop('checked')?'check':'uncheck');
       $('.tool-filer input:checkbox[name!=selectAll]').each(function(){
