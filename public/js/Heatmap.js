@@ -941,7 +941,6 @@ var BMapLib = window.BMapLib = BMapLib || {};
      * @param {Number} count 权重
      */
     HeatmapOverlay.prototype.addDataPoint = function(lng, lat, count) {
-        
         if(!isSupportCanvas()){
             return ;
         }
@@ -996,6 +995,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
         }
         for(var key in options){
             if(key == "radius"){
+                // this.conf = opts;
                 this.heatmap._store._cfgRadius = options[key]; 
             }
             if( key == 'opacity'){

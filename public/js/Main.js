@@ -114,7 +114,7 @@ var MyLib = window.MyLib = MyLib || {};
         if (this._heatmapOverlay == null) {
           // 生成热力图防止卡顿
           this._heatmapOverlay = new BMapLib.HeatmapOverlay({
-            "radius": 80*(this._map.getZoom()-9)/2,
+            "radius": 20+(this._map.getZoom()-10)*30,
             "visible": true,
             "gradient": {
               0.2: "rgb(16,117,58)",
@@ -125,13 +125,15 @@ var MyLib = window.MyLib = MyLib || {};
               1.0: "rgb(204,48,25)"
             }
           });
-        } else {
-          this._heatmapOverlay.setOptions({
-            "radius": 80*(this._map.getZoom()-9)/2
-          });
         }
         this._map.addOverlay(this._heatmapOverlay);
         this._heatmapOverlay.setDataSet({data:points,max:12});
+
+        if (this._heatmapOverlay != null) {
+          this._heatmapOverlay.setOptions({
+            "radius": 20+(this._map.getZoom()-10)*30
+          });
+        }
       }
     , addTrend: function(cp,data){
         cp = cp || 1;
@@ -415,6 +417,7 @@ var MyLib = window.MyLib = MyLib || {};
           var params = e.target._params;
           var data = {
             title: params.name,
+            type: params.type,
             exponential: params.exponential,
             exponentialDes: params.exponentialDes,
             lng: params.lng,

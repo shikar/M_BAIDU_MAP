@@ -281,8 +281,21 @@ var WinInfo_AT_TOP = 1, WinInfo_AT_RIGHT = 2, WinInfo_AT_BOTTOM = 3, WinInfo_AT_
         this._content += $.sprintf(item, '水质指数', params.exponential);
         break;
     };
-    this._content += '</dl></div><div class="win-foot"><a href="javascript:void(0)">最近检测结果</a><a href="javascript:void(0)">既往检测结果</a>';
-    if (params.type == 2) this._content += '<a href="javascript:void(0)">在线检测信息</a>';
+    this._content += '</dl></div><div class="win-foot">';
+    if (params.exponential <= 0.2) {
+      this._content += '<img src="img/bq_01.png">';
+    } else if (params.exponential > 0.2  && params.exponential <= 0.4) {
+      this._content += '<img src="img/bq_02.png">';
+    } else if (params.exponential > 0.4  && params.exponential <= 0.7) {
+      this._content += '<img src="img/bq_03.png">';
+    } else if (params.exponential > 0.7  && params.exponential <= 1) {
+      this._content += '<img src="img/bq_04.png">';
+    } else if (params.exponential > 1  && params.exponential <= 2) {
+      this._content += '<img src="img/bq_05.png">';
+    } else {
+      this._content += '<img src="img/bq_06.png">';
+    }
+    // if (params.type == 2) this._content += '<a href="javascript:void(0)">在线检测信息</a>';
     this._content += '</div></div>';
 
     this._isOpen = false;

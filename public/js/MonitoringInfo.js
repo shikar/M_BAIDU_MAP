@@ -167,8 +167,10 @@ var BMapLib = window.BMapLib = BMapLib || {};
      * @private
      * @type {String | HTMLElement}
      */
+    var typeLab = {0:'原水', 1:'出厂水', 2:'管网水'}
     this._content = '<div class="icon-info">' +
         '  <div class="icon-info-title">' + params.title + '</div>' +
+        '  <div class="icon-info-title-small">' + typeLab[params.type] + '</div>' +
         '  <div class="icon-info-exp">' + params.exponential + '</div>' +
         '  <div class="icon-info-desc">' + params.exponentialDes + '</div>' +
         '</div>';
