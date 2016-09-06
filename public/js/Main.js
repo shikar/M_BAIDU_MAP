@@ -151,7 +151,7 @@ var MyLib = window.MyLib = MyLib || {};
     , addAllPoints: function(pointDatas){
         for (var key in pointDatas) {
           var pointData = pointDatas[key];
-          var dashed = (this._curMenuId=='menu4'||this._curMenuId=='menu5'?true:false)
+          var dashed = (this._curMenuId=='menu5'?true:false)
           var myRM = new BMapLib.MonitoringPoints(pointData, dashed);
           myRM.addEventListener("onmouseover", $.proxy(this.onMonitoringOver, this));
           myRM.addEventListener("onmouseout", $.proxy(this.onMonitoringOut, this));
@@ -564,10 +564,10 @@ var MyLib = window.MyLib = MyLib || {};
           for (j in jvData[i].lsn){
             if (lsnVal == 'all' || jvData[i].lsn[j] == lsnVal) {
               trhtml += $.sprintf(
-                '<tr><td>%s</td><td>%s<img style="vertical-align:middle" src="img/icon_%s.png"></td><td>%s</td></tr>',
+                '<tr><td>%s</td><td><img style="vertical-align:middle" src="img/icon_%s.png">%s</td><td>%s</td></tr>',
                 jvData[i].lsn[j],
-                jvData[i].lsv[j],
                 jvData[i].lsvn[j] == '合格'?'y':'n',
+                jvData[i].lsv[j],
                 jvData[i].date
               );
             }
