@@ -299,7 +299,7 @@ var MyLib = window.MyLib = MyLib || {};
       }
     , winChartOpen: function(opened){
         var btFull = $('#fullChart');
-        var win = $('.win-chart');
+        var win = $('.chart1');
         var blockAll = $('.blockAll');
         if (opened == 'open') {
           btFull.addClass('opened');
@@ -322,8 +322,13 @@ var MyLib = window.MyLib = MyLib || {};
             yAxisData.push(this._curChartData.chartData[i].value);
             thStr += $.sprintf('<th>%s</th>', this._curChartData.chartData[i].date);
             tdValStr += $.sprintf('<td>%s</td>', this._curChartData.chartData[i].value);
-            BlLab = (this._curChartData.chartData[i].value <= 0.07);
-            tdLabStr += $.sprintf('<td%s>%s</td>', (BlLab?' class="green"':''),(BlLab?'清洁':'微清洁'));
+            if (this._curChartData.chartData[i].hasOwnProperty('r')) {
+              BlLab = (this._curChartData.chartData[i].r == '合格');
+              tdLabStr += $.sprintf('<td%s>%s</td>', (BlLab?' class="green"':''),(BlLab?'合格':'不合格'));
+            } else {
+              BlLab = (this._curChartData.chartData[i].value <= 0.07);
+              tdLabStr += $.sprintf('<td%s>%s</td>', (BlLab?' class="green"':''),(BlLab?'清洁':'微清洁'));
+            }
           }
           var eClartEl = win.find('.echart');
           eClartEl.html();
@@ -570,6 +575,25 @@ var MyLib = window.MyLib = MyLib || {};
           if (trhtml != '') break;
         }
         $('.last-body .bottom tbody').html(trhtml);
+        $('.last-body .bottom tbody tr').on('click', $.proxy(this.onJVClick, this))
+      }
+    , onJVClick: function (e){
+        var cur = $(e.currentTarget);
+        console.log(cur.length);
+        this._curChartData = {
+          name: cur.find('td:eq(0)').text(),
+          chartData: [
+            {"date":"2016-01-12","value":"0.07","r":"合格"},
+            {"date":"2016-02-12","value":"0.17","r":"合格"},
+            {"date":"2016-03-12","value":"0.22","r":"合格"},
+            {"date":"2016-04-12","value":"0.01","r":"合格"},
+            {"date":"2016-05-12","value":"0.25","r":"合格"},
+            {"date":"2016-06-12","value":"0.78","r":"合格"},
+            {"date":"2016-07-12","value":"1.07","r":"不合格"},
+            {"date":"2016-08-12","value":"0.27","r":"合格"}
+          ]
+        };
+        this.winChartOpen('open');
       }
     , onJVReset: function(jvData){
         this.addJVInfo(jvData);
