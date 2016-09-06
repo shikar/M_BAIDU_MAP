@@ -182,6 +182,9 @@ table{
 .panel-group .panel-body .last-body .bottom table td{
   border-top: solid 1px #ccc;
 }
+.panel-group .panel-body .last-body .bottom table tbody td{
+  cursor: pointer;
+}
 /* @end */
 
 /* @group 地图图标点 */
