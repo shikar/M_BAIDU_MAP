@@ -403,13 +403,13 @@ var BMapLib = window.BMapLib = BMapLib || {};
           <label><input type="checkbox" name="areaName" value="闵行区" checked> 闵行区</label>\
           <label><input type="checkbox" name="areaName" value="宝山区" checked> 宝山区</label>\
           <label><input type="checkbox" name="areaName" value="嘉定区" checked> 嘉定区</label>\
-          <label><input type="checkbox" name="areaName" value="浦东新区" checked> 浦东新区</label>\
           <label><input type="checkbox" name="areaName" value="金山区" checked> 金山区</label>\
           <label><input type="checkbox" name="areaName" value="松江区" checked> 松江区</label>\
           <label><input type="checkbox" name="areaName" value="青浦区" checked> 青浦区</label>\
           <label><input type="checkbox" name="areaName" value="闸北区" checked> 闸北区</label>\
           <label><input type="checkbox" name="areaName" value="奉贤区" checked> 奉贤区</label>\
           <label><input type="checkbox" name="areaName" value="崇明区" checked> 崇明区</label>\
+		  <label><input type="checkbox" name="areaName" value="浦东新区" checked> 浦东新区</label>\
         </div>\
         <div id="tfMain" class="tf-panel">\
           <label><input type="checkbox" name="selectAll" checked> 全选</label><br>\
@@ -419,8 +419,11 @@ var BMapLib = window.BMapLib = BMapLib || {};
           <label><input type="checkbox" name="prepoint" value="金泽水库" checked> 金泽水库</label>\
         </div>\
         <div id="tfTap" class="tf-panel">\
-          <label><input type="checkbox" name="selectAll" checked> 全选</label><br>\
           <dl>\
+			<dt></dt>\
+            <dd>\
+				<label><input type="checkbox" name="selectAll" checked> 全选</label>\
+            </dd>\
             <dt>级别:</dt>\
             <dd>\
               <label><input type="checkbox" name="lvl" value="市级" checked> 市级</label>\
@@ -441,8 +444,11 @@ var BMapLib = window.BMapLib = BMapLib || {};
           </dl>\
         </div>\
         <div id="tfRaw" class="tf-panel">\
-          <label><input type="checkbox" name="selectAll" checked> 全选</label><br>\
           <dl>\
+		    <dt></dt>\
+            <dd>\
+				<label><input type="checkbox" name="selectAll" checked> 全选</label>\
+            </dd>\
             <dt>监测方法:</dt>\
             <dd>\
               <label><input type="checkbox" name="mtd" value="在线监测" checked> 在线监测</label>\

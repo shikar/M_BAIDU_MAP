@@ -1,14 +1,16 @@
 var MyLib = window.MyLib = MyLib || {};
 (function(){
-  var YYSJC = MyLib.YYSJC = function (pointDatas, pointAllDatas) {
+  var YYSJC = MyLib.YYSJC = function (pointDatas, pointAllDatas,pointAllDatas_F) {
     if (!pointDatas) return
     this._data = this._pointDatas = pointDatas
     this._pointAllDatas = pointAllDatas
+	this._pointAllDatas_F = pointAllDatas_F
     this.init()
   }
   MyLib.YYSJC.prototype = {
       constructor: MyLib.YYSJC
-    , _pointAllDatas: null // 趋势和预测
+    , _pointAllDatas: null // 趋势
+	, _pointAllDatas_F: null //预测
     , _data: null // 数据
     , _prepoint: null // 管水厂水 父级
     , _curMenuId: 'menu1' // 当前菜单号
@@ -90,7 +92,7 @@ var MyLib = window.MyLib = MyLib || {};
           break;
         case 'menu5':
           this.addForecast();
-          this._toolTimeBar.reset(this._pointAllDatas);
+          this._toolTimeBar.reset(this._pointAllDatas_F);
           this._toolTimeBar.show();
           break;
         };

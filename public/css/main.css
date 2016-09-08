@@ -415,7 +415,7 @@ table{
 .tool-filer .tf-box .tf-panel dl dt{
   float: left;
   width: 100px;
-  text-align: right;
+  text-align: left;
 }
 .tool-filer .tf-box .tf-panel dl dd{
   margin-left: 110px;

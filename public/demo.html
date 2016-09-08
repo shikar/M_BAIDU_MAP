@@ -13,6 +13,7 @@
   <script type="text/javascript" src="js/icheck.min.js"></script>
   <script type="text/javascript" src="js/PointsData.js"></script>
   <script type="text/javascript" src="js/PointAllDatas.js"></script>
+  <script type="text/javascript" src="js/PointAllDatas_F.js"></script>
   <script type="text/javascript" src="js/PointsJVData.js"></script>
   <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=BP8iUvjr9G2qm5zYcmFLA6f4GyXNZEer"></script>
   <script type="text/javascript" src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
@@ -62,6 +63,7 @@
                 <select name="lsn">
                   <option value="all">检测指标</option>
                 </select>
+                <br>
                 时间:
                 <select name="date">
                   <option value="all">检测时间</option>
@@ -180,7 +182,7 @@
 </html>
 <script>
 $(document).ready(function(){
-  var map = new MyLib.YYSJC(pointDatas, pointAllDatas);
+  var map = new MyLib.YYSJC(pointDatas, pointAllDatas,pointAllDatas_F);
 
   $('input').iCheck({
     checkboxClass: 'icheckbox_flat-blue',
