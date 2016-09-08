@@ -92,7 +92,7 @@ var MyLib = window.MyLib = MyLib || {};
           break;
         case 'menu5':
           this.addForecast();
-          this._toolTimeBar.reset(this._pointAllDatas_F);
+          this._toolTimeBar.reset(this._pointAllDatas_F, true);
           this._toolTimeBar.show();
           break;
         };
@@ -139,13 +139,13 @@ var MyLib = window.MyLib = MyLib || {};
       }
     , addTrend: function(cp,data){
         cp = cp || 1;
-        console.log('Trend:'+cp);
+        // console.log('Trend:'+cp);
         this._pointDatas = data;
         this.addPoints();
       }
     , addForecast: function(cp,data){
         cp = cp || 1;
-        console.log('Forecast:'+cp);
+        // console.log('Forecast:'+cp);
         this._pointDatas = data;
         this.addPoints();
       }
@@ -541,7 +541,6 @@ var MyLib = window.MyLib = MyLib || {};
         this.winChartOpen('close');
       }
     , onTimeBarSelected: function(e){
-        console.log('selected:'+e.selected);
         switch(this._curMenuId)
         {
         case 'menu4':
@@ -585,7 +584,6 @@ var MyLib = window.MyLib = MyLib || {};
       }
     , onJVClick: function (e){
         var cur = $(e.currentTarget);
-        console.log(cur.length);
         this._curChartData = {
           name: cur.find('td:eq(0)').text(),
           chartData: [

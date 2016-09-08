@@ -528,12 +528,16 @@ table{
   display: block;
   position: absolute;
   left: 0;
-  float: left;
   text-align: center;
   width: 80px;
   font-size: 11px;
 }
-
+.tool-timebar .lab{
+  display: block;
+  position: absolute;
+  top: 8px;
+  left: 560px;
+}
 
 .win-close{
   z-index: 99;

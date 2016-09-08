@@ -393,6 +393,10 @@ var BMapLib = window.BMapLib = BMapLib || {};
           <div class="lab-item">2016-05-01</div>\
         </div>\
         <a class="btn-drag" href="javascript:void(0)">拖动点</a>\
+        <div class="lab hide">\
+          整体准确度: 86%<br>\
+          预测时间: 2016-09-01\
+        </div>\
       </div>';
     /**
      * marker主容器
@@ -498,7 +502,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
       this._appendContent();
   }
 
-  ToolTimeBar.prototype.reset = function (data) {
+  ToolTimeBar.prototype.reset = function (data, show) {
     var px = 0,
         drag = $(this._container).find('.btn-drag');
     this.formatData(data);
@@ -506,6 +510,11 @@ var BMapLib = window.BMapLib = BMapLib || {};
     this._selected = 1;
     px = (this._selected-1)*this._dis+this._startX;
     drag.css('left', px+'px');
+    console.log(show);
+    if (show)
+      $(this._container).find('.lab').show();
+    else
+      $(this._container).find('.lab').hide();
     _dispatchEvent(this, "onselected", {selected:this._selected,data:this._data[this._selected-1][this._keys[this._selected-1]]});
   }
 
