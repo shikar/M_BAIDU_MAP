@@ -241,7 +241,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
     me._appendContent();
     // 获取主容器的高宽
     me._getContainerSize();
-    me._panBox();
+    // me._panBox();
     return div;
   }
 

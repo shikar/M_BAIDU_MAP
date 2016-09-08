@@ -119,6 +119,21 @@ var WinInfo_AT_TOP = 1, WinInfo_AT_RIGHT = 2, WinInfo_AT_BOTTOM = 3, WinInfo_AT_
       return element;
     };
     baidu.un = baidu.event.un;
+    /**
+     * 阻止事件的默认行为
+     * @name baidu.event.preventDefault
+     * @function
+     * @grammar baidu.event.preventDefault(event)
+     * @param {Event} event 事件对象
+     * @meta standard
+     */
+    baidu.preventDefault = baidu.event.preventDefault = function (event) {
+        if (event.preventDefault) {
+            event.preventDefault();
+        } else {
+            event.returnValue = false;
+        }
+    };
     baidu.dom.g = function (id) {
       if ('string' == typeof id || id instanceof String) {
         return document.getElementById(id);
@@ -505,6 +520,7 @@ var WinInfo_AT_TOP = 1, WinInfo_AT_RIGHT = 2, WinInfo_AT_BOTTOM = 3, WinInfo_AT_
       this._content = content;
       //添加click关闭WinInfo事件
       this._addEventToClose();
+      this._setEventDispath();
 
     },
     /**
@@ -540,6 +556,194 @@ var WinInfo_AT_TOP = 1, WinInfo_AT_RIGHT = 2, WinInfo_AT_BOTTOM = 3, WinInfo_AT_
     _getWinInfoSize: function(){
       this._boxWidth = parseInt(this._div.offsetWidth,10);
       this._boxHeight = parseInt(this._div.offsetHeight,10);
+    },
+    _setEventDispath: function(){
+      var me = this,
+          div = me._div,
+          isMouseDown = false,
+          // 鼠标是否按下，用以判断鼠标移动过程中的拖拽计算
+          startPosition = null; // 拖拽时，鼠标按下的初始位置，拖拽的辅助计算参数
+
+      // 通过e参数获取当前鼠标所在位置
+      function _getPositionByEvent(e) {
+          var e = window.event || e,
+              x = e.pageX || e.clientX || 0,
+              y = e.pageY || e.clientY || 0,
+              pixel = new BMap.Pixel(x, y),
+              point = me._map.pixelToPoint(pixel);
+          return {
+              "pixel": pixel,
+              "point": point
+          };
+      }
+      // 鼠标弹起事件
+      var mouseUpEvent = function (e) {
+          var position = _getPositionByEvent(e);
+          /**
+           * 在Marker上弹起鼠标时，派发事件的接口
+           * @name RichMarker#onmouseup
+           * @event
+           * @param {Event Object} e 回调函数会返回event参数，包括以下返回值：
+           * <br />{"<b>target</b> : {BMap.Overlay} 触发事件的元素,
+           * <br />"<b>type</b>：{String} 事件类型,
+           * <br />"<b>point</b>：{BMap.Point} 鼠标的物理坐标,
+           * <br />"<b>pixel</b>：{BMap.Pixel} 鼠标的像素坐标}
+           *
+           * @example <b>参考示例：</b>
+           * myRichMarkerObject.addEventListener("onmouseup", function(e) {
+           *     alert(e.type);
+           * });
+           */
+          me._dispatchEvent(me, "onmouseup", {
+              "point": position.point,
+              "pixel": position.pixel
+          });
+
+          if (me._div.releaseCapture) {
+              baidu.un(div, "onmousemove", mouseMoveEvent);
+              baidu.un(div, "onmouseup", mouseUpEvent);
+          } else {
+              baidu.un(window, "onmousemove", mouseMoveEvent);
+              baidu.un(window, "onmouseup", mouseUpEvent);
+          }
+
+          // 拖拽结束时，释放鼠标捕获
+          me._div.releaseCapture && me._container.releaseCapture();
+          /**
+           * 拖拽Marker结束时，派发事件的接口
+           * @name RichMarker#ondragend
+           * @event
+           * @param {Event Object} e 回调函数会返回event参数，包括以下返回值：
+           * <br />{"<b>target</b> : {BMap.Overlay} 触发事件的元素,
+           * <br />"<b>type</b>：{String} 事件类型,
+           * <br />"<b>point</b>：{BMap.Point} 鼠标的物理坐标,
+           * <br />"<b>pixel</b>：{BMap.Pixel} 鼠标的像素坐标}
+           *
+           * @example <b>参考示例：</b>
+           * myRichMarkerObject.addEventListener("ondragend", function(e) {
+           *     alert(e.type);
+           * });
+           */
+          me._dispatchEvent(me, "ondragend", {
+              "point": position.point,
+              "pixel": position.pixel
+          });
+          isMouseDown = false;
+          startPosition = null;
+          // 设置拖拽结束后的鼠标手型
+          // me._setCursor("dragend");
+          // 拖拽过程中防止文字被选中
+          me._div.style['MozUserSelect'] = '';
+          me._div.style['KhtmlUserSelect'] = '';
+          me._div.style['WebkitUserSelect'] = '';
+          me._div['unselectable'] = 'off';
+          me._div['onselectstart'] = function () {};
+
+          me._stopAndPrevent(e);
+      }
+
+          // 鼠标移动事件
+      var mouseMoveEvent = function (e) {
+          var position = _getPositionByEvent(e);
+
+          // 计算当前marker应该所在的位置
+          var startPixel = me._map.pointToPixel(me.getPosition());
+          var x = position.pixel.x - startPosition.x + startPixel.x;
+          var y = position.pixel.y - startPosition.y + startPixel.y;
+
+          startPosition = position.pixel;
+          me.setPosition(me._map.pixelToPoint(new BMap.Pixel(x, y)));
+          me.draw();
+          // 设置拖拽过程中的鼠标手型
+          // me._setCursor("dragging");
+          /**
+           * 拖拽Marker的过程中，派发事件的接口
+           * @name RichMarker#ondragging
+           * @event
+           * @param {Event Object} e 回调函数会返回event参数，包括以下返回值：
+           * <br />{"<b>target</b> : {BMap.Overlay} 触发事件的元素,
+           * <br />"<b>type</b>：{String} 事件类型,
+           * <br />"<b>point</b>：{BMap.Point} 鼠标的物理坐标,
+           * <br />"<b>pixel</b>：{BMap.Pixel} 鼠标的像素坐标}
+           *
+           * @example <b>参考示例：</b>
+           * myRichMarkerObject.addEventListener("ondragging", function(e) {
+           *     alert(e.type);
+           * });
+           */
+          me._dispatchEvent(me, "ondragging", {
+              "point": position.point,
+              "pixel": position.pixel
+          });
+          me._stopAndPrevent(e);
+      }
+
+      // 鼠标按下事件
+      baidu.on(div, "onmousedown", function (e) {
+          var position = _getPositionByEvent(e);
+          /**
+           * 在Marker上按下鼠标时，派发事件的接口
+           * @name RichMarker#onmousedown
+           * @event
+           * @param {Event Object} e 回调函数会返回event参数，包括以下返回值：
+           * <br />{"<b>target</b> : {BMap.Overlay} 触发事件的元素,
+           * <br />"<b>type</b>：{String} 事件类型,
+           * <br />"<b>point</b>：{BMap.Point} 鼠标的物理坐标,
+           * <br />"<b>pixel</b>：{BMap.Pixel} 鼠标的像素坐标}
+           *
+           * @example <b>参考示例：</b>
+           * myRichMarkerObject.addEventListener("onmousedown", function(e) {
+           *     alert(e.type);
+           * });
+           */
+          me._dispatchEvent(me, "onmousedown", {
+              "point": position.point,
+              "pixel": position.pixel
+          });
+
+          if (me._div.setCapture) {
+              baidu.on(div, "onmousemove", mouseMoveEvent);
+              baidu.on(div, "onmouseup", mouseUpEvent);
+          } else {
+              baidu.on(window, "onmousemove", mouseMoveEvent);
+              baidu.on(window, "onmouseup", mouseUpEvent);
+          }
+
+          startPosition = position.pixel;
+          /**
+           * 开始拖拽Marker时，派发事件的接口
+           * @name RichMarker#ondragstart
+           * @event
+           * @param {Event Object} e 回调函数会返回event参数，包括以下返回值：
+           * <br />{"<b>target</b> : {BMap.Overlay} 触发事件的元素,
+           * <br />"<b>type</b>：{String} 事件类型,
+           * <br />"<b>point</b>：{BMap.Point} 鼠标的物理坐标,
+           * <br />"<b>pixel</b>：{BMap.Pixel} 鼠标的像素坐标}
+           *
+           * @example <b>参考示例：</b>
+           * myRichMarkerObject.addEventListener("ondragstart", function(e) {
+           *     alert(e.type);
+           * });
+           */
+          me._dispatchEvent(me, "ondragstart", {
+              "point": position.point,
+              "pixel": position.pixel
+          });
+          isMouseDown = true;
+          // 设置拖拽开始的鼠标手型
+          // me._setCursor("dragstart");
+          // 拖拽开始时，设置鼠标捕获
+          me._div.setCapture && me._container.setCapture();
+          // 拖拽过程中防止文字被选中
+          me._div.style['MozUserSelect'] = 'none';
+          me._div.style['KhtmlUserSelect'] = 'none';
+          me._div.style['WebkitUserSelect'] = 'none';
+          me._div['unselectable'] = 'on';
+          me._div['onselectstart'] = function () {
+              return false;
+          };
+          me._stopAndPrevent(e);
+      });
     },
     /**
      * 添加关闭事件
@@ -642,6 +846,16 @@ var WinInfo_AT_TOP = 1, WinInfo_AT_RIGHT = 2, WinInfo_AT_BOTTOM = 3, WinInfo_AT_
         }
       }
       instance.dispatchEvent(event);
+    },
+    /**
+     * 停止事件冒泡传播
+     *
+     * @type {Event} e e对象
+     */
+    _stopAndPrevent: function(e) {
+      var e = window.event || e;
+      e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+      return baidu.preventDefault(e);
     }
   });
 })();

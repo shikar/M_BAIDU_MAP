@@ -610,7 +610,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
        *     alert(e.type);
        * });
        */
-      div.style.zIndex = 99999;
+      if (div.style.zIndex < 100000) div.style.zIndex = 99999;
       _dispatchEvent(me, "onmouseover", {
           "point": position.point,
           "pixel": position.pixel
@@ -619,7 +619,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
     });
     baidu.on(div, "onmouseout", function(e){
       var position = _getPositionByEvent(e);
-      div.style.zIndex = me._zIndex;
+      if (div.style.zIndex < 100000) div.style.zIndex = me._zIndex;
       /**
        * 鼠标移出Marker时，派发事件的接口
        * @name MonitoringPoints#onmouseout

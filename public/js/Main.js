@@ -168,7 +168,7 @@ var MyLib = window.MyLib = MyLib || {};
           var pointData = pointDatas[key];
           if (!areas.hasOwnProperty(pointData.areaName)) areas[pointData.areaName] = {count:0, exponential:0, lng:0, lat:0};
           areas[pointData.areaName].count++;
-          areas[pointData.areaName].exponential += pointData.exponential;
+          if (pointData.exponential > areas[pointData.areaName].exponential) areas[pointData.areaName].exponential = pointData.exponential;
           areas[pointData.areaName].lng += pointData.lng;
           areas[pointData.areaName].lat += pointData.lat;
         }
@@ -177,7 +177,7 @@ var MyLib = window.MyLib = MyLib || {};
           var areaData = {
             areaName:key,
             count:area.count,
-            exponential:area.exponential/area.count,
+            exponential:area.exponential,
             lng:area.lng/area.count,
             lat:area.lat/area.count
           };
@@ -465,7 +465,10 @@ var MyLib = window.MyLib = MyLib || {};
 
           // 绘制区域
           if (params.area.length > 0) {
-            if (this._ply != null) this._map.removeOverlay(ply);
+            if (this._ply != null) {
+              this._map.removeOverlay(this._ply);
+              this._ply = null;
+            }
             var pts=[], i;
             for (i in params.area) {
               pts.push(new BMap.Point(params.area[i].lng, params.area[i].lat));
@@ -486,6 +489,7 @@ var MyLib = window.MyLib = MyLib || {};
             var cur = this._map.getOverlays()[i];
             if (!cur.hasOwnProperty('_params') || !cur._params.hasOwnProperty('lng')) continue;
             if (cur._params.lng == params.lng && cur._params.lat == params.lat) {
+              $(cur._container).css('z-index', 100000);
               $(cur._container).find('a').addClass('selected');
             }
           }
